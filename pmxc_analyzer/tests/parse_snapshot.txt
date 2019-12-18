@@ -1,0 +1,190 @@
+N(Root) [
+    N(EnumDecl) [
+        T(Enum) "enum"
+        ^ [
+            T(Space) " "
+        ]
+        T(Ident) "Boolean"
+        ^ [
+            T(Space) " "
+        ]
+        T(LeftBrace) "{"
+        N(CtorDecl) [
+            v [
+                T(Eol) "\n"
+                T(Space) "    "
+            ]
+            T(Ident) "True"
+        ]
+        T(Comma) ","
+        N(CtorDecl) [
+            v [
+                T(Eol) "\n"
+                T(Space) "    "
+            ]
+            T(Ident) "False"
+        ]
+        T(Comma) ","
+        v [
+            T(Eol) "\n"
+        ]
+        T(RightBrace) "}"
+    ]
+    N(MatchStmt) [
+        v [
+            T(Eol) "\n"
+            T(Eol) "\n"
+        ]
+        T(Match) "match"
+        ^ [
+            T(Space) " "
+        ]
+        N(Name) [
+            T(Ident) "True"
+            ^ [
+                T(Space) " "
+            ]
+        ]
+        T(LeftBrace) "{"
+        N(MatchArm) [
+            N(Name) [
+                v [
+                    T(Eol) "\n"
+                    T(Space) "    "
+                ]
+                T(Ident) "True"
+                ^ [
+                    T(Space) " "
+                ]
+            ]
+            T(Equal) "="
+            T(RightAngle) ">"
+            ^ [
+                T(Space) " "
+            ]
+            T(LeftBrace) "{"
+            v [
+                T(Eol) "\n"
+                T(Space) "        "
+                T(Comment) "// YES"
+                T(Eol) "\n"
+                T(Space) "    "
+            ]
+            T(RightBrace) "}"
+        ]
+        N(MatchArm) [
+            N(Name) [
+                v [
+                    T(Eol) "\n"
+                    T(Space) "    "
+                ]
+                T(Ident) "False"
+                ^ [
+                    T(Space) " "
+                ]
+            ]
+            T(Equal) "="
+            T(RightAngle) ">"
+            ^ [
+                T(Space) " "
+            ]
+            T(LeftBrace) "{"
+            v [
+                T(Eol) "\n"
+                T(Space) "        "
+                T(Comment) "// NO"
+                T(Eol) "\n"
+                T(Space) "    "
+            ]
+            T(RightBrace) "}"
+        ]
+        v [
+            T(Eol) "\n"
+        ]
+        T(RightBrace) "}"
+    ]
+    N(MatchStmt) [
+        v [
+            T(Eol) "\n"
+            T(Eol) "\n"
+        ]
+        T(Match) "match"
+        ^ [
+            T(Space) " "
+        ]
+        N(Name) [
+            T(Ident) "True"
+            ^ [
+                T(Space) " "
+            ]
+        ]
+        T(LeftBrace) "{"
+        N(MatchArm) [
+            N(Name) [
+                v [
+                    T(Eol) "\n"
+                    T(Space) "    "
+                ]
+                T(Ident) "True"
+                ^ [
+                    T(Space) " "
+                ]
+            ]
+            T(Equal) "="
+            T(RightAngle) ">"
+            ^ [
+                T(Space) " "
+            ]
+            T(LeftBrace) "{"
+            T(RightBrace) "}"
+        ]
+        v [
+            T(Eol) "\n"
+        ]
+        T(RightBrace) "}"
+    ]
+    N(MatchStmt) [
+        v [
+            T(Eol) "\n"
+            T(Eol) "\n"
+        ]
+        T(Match) "match"
+        ^ [
+            T(Space) " "
+        ]
+        N(Name) [
+            T(Ident) "False"
+            ^ [
+                T(Space) " "
+            ]
+        ]
+        T(LeftBrace) "{"
+        N(MatchArm) [
+            N(Name) [
+                v [
+                    T(Eol) "\n"
+                    T(Space) "    "
+                ]
+                T(Underscore) "_"
+                ^ [
+                    T(Space) " "
+                ]
+            ]
+            T(Equal) "="
+            T(RightAngle) ">"
+            ^ [
+                T(Space) " "
+            ]
+            T(LeftBrace) "{"
+            T(RightBrace) "}"
+        ]
+        v [
+            T(Eol) "\n"
+        ]
+        T(RightBrace) "}"
+    ]
+    v [
+        T(Eol) "\n"
+    ]
+    T(Eof) ""
+]

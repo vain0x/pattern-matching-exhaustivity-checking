@@ -1,9 +1,19 @@
 # パターンマッチ網羅性検査 プレイグラウンド
 
-パターンマッチ網羅性検査を試すためのウェブアプリ。
+パターンマッチ網羅性検査を試すためのウェブアプリです。
 
-エディタにソースコードを入力するとエラーなどが報告されます。
+エディタにソースコードを入力するとエラーなどが表示されます。
 
-## 参考
+## 開発環境
 
-- https://github.com/microsoft/monaco-editor-samples/tree/master/browser-esm-webpack-typescript
+- Node.js をインストールしてください。
+
+```sh
+npm ci
+```
+
+開発環境で動かすには、pmxc_analyzer をビルドしてから、webpack-dev-server を実行してください。
+
+```sh
+npm run dev:server
+```

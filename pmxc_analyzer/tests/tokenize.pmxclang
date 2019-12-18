@@ -1,0 +1,21 @@
+解釈できない文字
+
+enum Boolean {
+    True,
+    False,
+}
+
+let condition: Boolean;
+
+match condition {
+    True => {
+        // YES
+    }
+    False => {
+        // NO
+    }
+}
+
+解釈できない文字
+
+おわり

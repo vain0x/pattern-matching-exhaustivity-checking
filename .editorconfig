@@ -1,0 +1,4 @@
+root = true
+
+[*.pmxclang]
+end_of_line = lf

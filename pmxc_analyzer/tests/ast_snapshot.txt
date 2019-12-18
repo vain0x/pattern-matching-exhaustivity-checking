@@ -1,0 +1,105 @@
+Root {
+    stmts: [
+        EnumDecl {
+            name_opt: Some(
+                "Boolean",
+            ),
+            ctors: [
+                CtorDecl {
+                    name_opt: Some(
+                        "True",
+                    ),
+                    node: NodeData(..),
+                },
+                CtorDecl {
+                    name_opt: Some(
+                        "False",
+                    ),
+                    node: NodeData(..),
+                },
+            ],
+            node: NodeData(..),
+        },
+        MatchStmt {
+            cond_opt: Some(
+                CtorExpr {
+                    name_opt: Some(
+                        "True",
+                    ),
+                    node: NodeData(..),
+                },
+            ),
+            arms: [
+                MatchArm {
+                    pat_opt: Some(
+                        CtorPat {
+                            name_opt: Some(
+                                "True",
+                            ),
+                            node: NodeData(..),
+                        },
+                    ),
+                    node: NodeData(..),
+                },
+                MatchArm {
+                    pat_opt: Some(
+                        CtorPat {
+                            name_opt: Some(
+                                "False",
+                            ),
+                            node: NodeData(..),
+                        },
+                    ),
+                    node: NodeData(..),
+                },
+            ],
+            node: NodeData(..),
+        },
+        MatchStmt {
+            cond_opt: Some(
+                CtorExpr {
+                    name_opt: Some(
+                        "True",
+                    ),
+                    node: NodeData(..),
+                },
+            ),
+            arms: [
+                MatchArm {
+                    pat_opt: Some(
+                        CtorPat {
+                            name_opt: Some(
+                                "True",
+                            ),
+                            node: NodeData(..),
+                        },
+                    ),
+                    node: NodeData(..),
+                },
+            ],
+            node: NodeData(..),
+        },
+        MatchStmt {
+            cond_opt: Some(
+                CtorExpr {
+                    name_opt: Some(
+                        "False",
+                    ),
+                    node: NodeData(..),
+                },
+            ),
+            arms: [
+                MatchArm {
+                    pat_opt: Some(
+                        DiscardPat {
+                            node: NodeData(..),
+                        },
+                    ),
+                    node: NodeData(..),
+                },
+            ],
+            node: NodeData(..),
+        },
+    ],
+    node: NodeData(..),
+}
