@@ -1,0 +1,15 @@
+{
+  "name": "pmxc_analyzer",
+  "collaborators": [
+    "vain0x <vainzerox@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "pmxc_analyzer_bg.wasm",
+    "pmxc_analyzer.js",
+    "pmxc_analyzer.d.ts"
+  ],
+  "module": "pmxc_analyzer.js",
+  "types": "pmxc_analyzer.d.ts",
+  "sideEffects": "false"
+}

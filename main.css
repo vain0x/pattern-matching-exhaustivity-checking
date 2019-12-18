@@ -1,0 +1,38 @@
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: "You Gothic Medium", sans-serif;
+    font-size: 1.4rem;
+    line-height: 1.5;
+}
+
+code,
+pre,
+textarea {
+    font-family: "Source Han Code JP N", monospace;
+}
+
+pre {
+    margin: 0;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#editor {
+    width: 95vw;
+    height: 95vh;
+
+    border: 1px solid #f7f7f7;
+}
