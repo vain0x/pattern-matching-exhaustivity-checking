@@ -9,7 +9,7 @@ type TokenList = Rc<[TokenData]>;
 
 pub(crate) struct ParseContext {
     tokens: TokenList,
-    index: usize,
+    index: TokenIndex,
 }
 
 impl ParseContext {
@@ -19,10 +19,6 @@ impl ParseContext {
 
     pub(crate) fn assert_invariants(&self) {
         assert!(self.index <= self.tokens.len());
-    }
-
-    pub(crate) fn current_index(&self) -> usize {
-        self.index
     }
 
     pub(crate) fn at_eof(&self) -> bool {

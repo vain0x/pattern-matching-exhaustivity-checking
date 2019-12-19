@@ -1,4 +1,4 @@
-use super::space_from_ty::{space_can_decompose, space_decompose, space_from_ty};
+use super::space_from_ty::{space_can_decompose, space_decompose};
 use super::*;
 
 /// スペースの交差 (共通部分) を求める。

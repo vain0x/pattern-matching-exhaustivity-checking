@@ -18,6 +18,7 @@ pub(crate) mod monaco {
         use super::*;
 
         #[derive(Serialize)]
+        #[allow(unused)]
         pub enum MarkerSeverity {
             Hint = 1,
             Info = 2,

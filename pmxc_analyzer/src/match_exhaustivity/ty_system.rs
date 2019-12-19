@@ -85,7 +85,6 @@ impl TyDatabase {
                         }
                     })
                     .next(),
-                _ => None,
             })
             .next()
     }
@@ -110,37 +109,6 @@ impl TyDatabase {
                         }
                     })
                     .next(),
-            })
-            .next()
-    }
-
-    pub(crate) fn find_ty_by_name(&self, ty_name: &str) -> Option<Ty> {
-        self.definitions
-            .iter()
-            .filter_map(|d| match d {
-                TyDefinition::Enum {
-                    ref name,
-                    ref constructors,
-                } => {
-                    if name == ty_name {
-                        return Some(Ty::Enum {
-                            name: name.to_string(),
-                        });
-                    }
-
-                    constructors
-                        .iter()
-                        .filter_map(|k| {
-                            if k.name == ty_name {
-                                Some(Ty::Constructor {
-                                    name: k.name.to_string(),
-                                })
-                            } else {
-                                None
-                            }
-                        })
-                        .next()
-                }
             })
             .next()
     }

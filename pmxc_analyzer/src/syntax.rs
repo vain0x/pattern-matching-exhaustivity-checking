@@ -21,11 +21,9 @@ pub(crate) mod trivia;
 pub(crate) use ast::*;
 pub(crate) use element::Element;
 pub(crate) use node::{token_range_map::TokenRangeMap, Node, NodeData};
-pub(crate) use parse::parse;
 pub(crate) use parse_error::ParseError;
 pub(crate) use text_cursor::TextCursor;
 pub(crate) use token::{Token, TokenData};
-pub(crate) use tokenize::tokenize;
 pub(crate) use trivia::Trivia;
 
 /// 行番号と列番号で表されるテキスト上の位置。(1 から始まる。)
@@ -127,7 +125,7 @@ mod tests {
 
         let source_code = fs::read_to_string(&tests_dir.join("tokenize.pmxclang")).unwrap();
 
-        let tokens = tokenize(Rc::new(source_code));
+        let tokens = tokenize::tokenize(Rc::new(source_code));
 
         let mut snapshot = vec![];
         for token in tokens.iter() {
@@ -209,7 +207,7 @@ mod tests {
 
         let source_code = fs::read_to_string(&tests_dir.join("parse.pmxclang")).unwrap();
 
-        let root = parse(Rc::new(source_code));
+        let root = parse::parse(Rc::new(source_code));
 
         let mut cursor = TextCursor::default();
         let mut errors = vec![];
@@ -232,7 +230,7 @@ mod tests {
 
         let source_code = fs::read_to_string(&tests_dir.join("ast.pmxclang")).unwrap();
 
-        let root = Rc::new(parse(Rc::new(source_code)));
+        let root = Rc::new(parse::parse(Rc::new(source_code)));
         let ast = ast_gen::gen_root(root);
 
         let mut snapshot = vec![];

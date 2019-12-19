@@ -57,10 +57,6 @@ impl Token {
     pub(crate) fn is_trailing_trivia(self) -> bool {
         self == Token::Space || self == Token::Comment || self == Token::Other
     }
-
-    pub(crate) fn is_trivia(self) -> bool {
-        self.is_leading_trivia() || self.is_trailing_trivia()
-    }
 }
 
 /// 字句のデータ
@@ -88,10 +84,6 @@ impl TokenData {
 
     pub(crate) fn text(&self) -> &str {
         &self.text
-    }
-
-    pub(crate) fn len(&self) -> usize {
-        self.text.len()
     }
 
     pub(crate) fn leading(&self) -> &[Trivia] {
