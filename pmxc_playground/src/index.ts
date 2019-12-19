@@ -124,9 +124,14 @@ match Unit {
     True => {}
 }
 
-// NG: 存在しないコンストラクタ
+// NG: 存在しないコンストラクタのパターン
 match Unit {
-    NonExistingVariant => {}
+    NonExistingConstructor => {}
+}
+
+// NG: 存在しないコンストラクタの式
+match NonExistingConstructor {
+    _ => {}
 }
 `,
         language: "pmxclang",

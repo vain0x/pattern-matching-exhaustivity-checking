@@ -36,13 +36,18 @@ pub(crate) mod lower {
                 // 型検査
                 match (m.ty_database.find_constructor_by_name(name), ty) {
                     (Some((enum_name, _)), Ty::Enum { ref name }) if enum_name == name => {}
-                    _ => {
+                    (constructor_opt, _) => {
+                        let message = if constructor_opt.is_some() {
+                            "型が異なります"
+                        } else {
+                            "定義されていません"
+                        };
                         let range = node
                             .first_token(|token| token.token() == Token::Ident)
                             .and_then(|token| m.token_range_map.get(&token))
                             .cloned()
                             .unwrap_or_default();
-                        m.errors.push((range, "型が一致しません".to_string()));
+                        m.errors.push((range, message.to_string()));
                         return None;
                     }
                 }
@@ -55,14 +60,25 @@ pub(crate) mod lower {
         }
     }
 
-    fn analyze_expr(expr: &Expr, m: &MatchExhaustivityModel) -> Option<Ty> {
+    fn analyze_expr(expr: &Expr, m: &mut MatchExhaustivityModel) -> Option<Ty> {
         match expr {
             Expr::Ctor(CtorExpr {
                 name_opt: Some(ref name),
-                ..
+                ref node,
             }) => {
                 // FIXME: 未定義の名前はエラーにする
-                let (enum_name, _) = m.ty_database.find_constructor_by_name(name)?;
+                let enum_name = match m.ty_database.find_constructor_by_name(name) {
+                    None => {
+                        let range = node
+                            .first_token(|token| token.token() == Token::Ident)
+                            .and_then(|token| m.token_range_map.get(&token))
+                            .cloned()
+                            .unwrap_or_default();
+                        m.errors.push((range, "定義されていません".to_string()));
+                        return None;
+                    }
+                    Some((enum_name, _)) => enum_name,
+                };
 
                 Some(Ty::Enum {
                     name: enum_name.to_string(),
