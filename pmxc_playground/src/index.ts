@@ -71,12 +71,27 @@ const main = async () => {
     })
 
     const editor = monaco.editor.create(editorElement, {
-        value: `
+        value: `enum Unit {
+    Unit,
+}
 
 enum Boolean {
     True,
     False,
 }
+
+// OK: 網羅的
+match Unit {
+    Unit => {}
+}
+
+// OK: 網羅的
+match Unit {
+    _ => {}
+}
+
+// NG: 非網羅的
+match Unit {}
 
 // OK: 網羅的
 match True {
@@ -90,10 +105,28 @@ match True {
     False => {}
 }
 
-// NG: False が漏れる
+// OK: 網羅的
+match True {
+    True => {}
+    False => {}
+    True => {}
+    False => {}
+}
+
+// NG: 非網羅的
 match True {
     True => {}
     // False => {}
+}
+
+// NG: 型の異なるコンストラクタ
+match Unit {
+    True => {}
+}
+
+// NG: 存在しないコンストラクタ
+match Unit {
+    NonExistingVariant => {}
 }
 `,
         language: "pmxclang",

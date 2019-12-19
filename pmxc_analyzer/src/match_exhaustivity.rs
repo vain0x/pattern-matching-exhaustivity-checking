@@ -31,12 +31,22 @@ pub(crate) mod lower {
             Pat::Discard(..) => Some(Pattern::Discard),
             Pat::Ctor(CtorPat {
                 name_opt: Some(ref name),
-                ..
+                ref node,
             }) => {
+                // 型検査
                 match (m.ty_database.find_constructor_by_name(name), ty) {
                     (Some((enum_name, _)), Ty::Enum { ref name }) if enum_name == name => {}
-                    _ => return None,
+                    _ => {
+                        let range = node
+                            .first_token(|token| token.token() == Token::Ident)
+                            .and_then(|token| m.token_range_map.get(&token))
+                            .cloned()
+                            .unwrap_or_default();
+                        m.errors.push((range, "型が一致しません".to_string()));
+                        return None;
+                    }
                 }
+
                 Some(Pattern::Constructor {
                     name: name.to_string(),
                 })
