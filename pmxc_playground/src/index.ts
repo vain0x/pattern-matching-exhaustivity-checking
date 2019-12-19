@@ -1,5 +1,69 @@
 import * as monaco from "monaco-editor"
 
+const INITIAL_SOURCE_CODE = `enum Unit {
+    Unit,
+}
+
+enum Boolean {
+    False,
+    True,
+}
+
+// OK: 網羅的
+match Unit {
+    Unit => {}
+}
+
+// OK: 網羅的
+match Unit {
+    _ => {}
+}
+
+// NG: 非網羅的
+match Unit {}
+
+// OK: 網羅的
+match True {
+    True => {}
+    _ => {}
+}
+
+// OK: 網羅的
+match True {
+    True => {}
+    False => {}
+}
+
+// OK: 網羅的
+match True {
+    True => {}
+    False => {}
+    True => {}
+    False => {}
+}
+
+// NG: 非網羅的
+match True {
+    True => {}
+    // False => {}
+}
+
+// NG: 型の異なるコンストラクタ
+match Unit {
+    True => {}
+}
+
+// NG: 存在しないコンストラクタのパターン
+match Unit {
+    NonExistingConstructor => {}
+}
+
+// NG: 存在しないコンストラクタの式
+match NonExistingConstructor {
+    _ => {}
+}
+`
+
 const THE_STATE: monaco.languages.IState = {
     clone: () => THE_STATE,
     equals: (_other: monaco.languages.IState) => true,
@@ -71,70 +135,9 @@ const main = async () => {
     })
 
     const editor = monaco.editor.create(editorElement, {
-        value: `enum Unit {
-    Unit,
-}
-
-enum Boolean {
-    True,
-    False,
-}
-
-// OK: 網羅的
-match Unit {
-    Unit => {}
-}
-
-// OK: 網羅的
-match Unit {
-    _ => {}
-}
-
-// NG: 非網羅的
-match Unit {}
-
-// OK: 網羅的
-match True {
-    True => {}
-    _ => {}
-}
-
-// OK: 網羅的
-match True {
-    True => {}
-    False => {}
-}
-
-// OK: 網羅的
-match True {
-    True => {}
-    False => {}
-    True => {}
-    False => {}
-}
-
-// NG: 非網羅的
-match True {
-    True => {}
-    // False => {}
-}
-
-// NG: 型の異なるコンストラクタ
-match Unit {
-    True => {}
-}
-
-// NG: 存在しないコンストラクタのパターン
-match Unit {
-    NonExistingConstructor => {}
-}
-
-// NG: 存在しないコンストラクタの式
-match NonExistingConstructor {
-    _ => {}
-}
-`,
+        automaticLayout: true,
         language: "pmxclang",
+        value: INITIAL_SOURCE_CODE,
     })
 
     editor.onDidChangeModelContent(() => {
