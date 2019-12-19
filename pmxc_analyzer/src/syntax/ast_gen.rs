@@ -54,7 +54,7 @@ impl NodeData {
     }
 }
 
-fn gen_pat(node: Rc<NodeData>) -> Option<Ast> {
+fn gen_pat(node: Rc<NodeData>) -> Option<Pat> {
     assert!(node.node().is_pat());
 
     match node.node() {
@@ -63,11 +63,11 @@ fn gen_pat(node: Rc<NodeData>) -> Option<Ast> {
                 .first_token(|token| token.token() == Token::Underscore)
                 .is_some()
             {
-                return Some(Ast::DiscardPat { node });
+                return Some(Pat::Discard(DiscardPat { node }));
             }
 
             let name_opt = node.first_ident();
-            Some(Ast::CtorPat { name_opt, node })
+            Some(Pat::Ctor(CtorPat { name_opt, node }))
         }
         Node::Group => node
             .first_node(|child| child.node().is_pat())
@@ -76,13 +76,13 @@ fn gen_pat(node: Rc<NodeData>) -> Option<Ast> {
     }
 }
 
-fn gen_expr(node: Rc<NodeData>) -> Option<Ast> {
+fn gen_expr(node: Rc<NodeData>) -> Option<Expr> {
     assert!(node.node().is_expr());
 
     match node.node() {
         Node::Name => {
             let name_opt = node.first_ident();
-            Some(Ast::CtorExpr { name_opt, node })
+            Some(Expr::Ctor(CtorExpr { name_opt, node }))
         }
         Node::Group => node
             .first_node(|child| child.node().is_expr())
@@ -91,22 +91,20 @@ fn gen_expr(node: Rc<NodeData>) -> Option<Ast> {
     }
 }
 
-fn gen_match_arm(node: Rc<NodeData>) -> Option<Ast> {
+fn gen_match_arm(node: Rc<NodeData>) -> Option<MatchArm> {
     assert_eq!(node.node(), Node::MatchArm);
 
     let pat_opt = node
         .first_node(|child| child.node().is_pat())
-        .and_then(gen_pat)
-        .map(Box::new);
+        .and_then(gen_pat);
 
-    Some(Ast::MatchArm { pat_opt, node })
+    Some(MatchArm { pat_opt, node })
 }
 
-fn gen_match_stmt(node: Rc<NodeData>) -> Option<Ast> {
+fn gen_match_stmt(node: Rc<NodeData>) -> Option<MatchStmt> {
     let cond_opt = node
         .first_node(|child| child.node().is_expr())
-        .and_then(gen_expr)
-        .map(Box::new);
+        .and_then(gen_expr);
 
     let arms = node
         .filter_node(|child| child.node() == Node::MatchArm)
@@ -114,14 +112,14 @@ fn gen_match_stmt(node: Rc<NodeData>) -> Option<Ast> {
         .filter_map(|child| gen_match_arm(child))
         .collect();
 
-    Some(Ast::MatchStmt {
+    Some(MatchStmt {
         cond_opt,
         arms,
         node,
     })
 }
 
-fn gen_enum_decl(node: Rc<NodeData>) -> Option<Ast> {
+fn gen_enum_decl(node: Rc<NodeData>) -> Option<EnumDecl> {
     if node.node() != Node::EnumDecl {
         return None;
     }
@@ -134,27 +132,27 @@ fn gen_enum_decl(node: Rc<NodeData>) -> Option<Ast> {
         .filter_map(|child| gen_ctor_decl(child))
         .collect();
 
-    Some(Ast::EnumDecl {
+    Some(EnumDecl {
         name_opt,
         ctors,
         node,
     })
 }
 
-fn gen_ctor_decl(node: Rc<NodeData>) -> Option<Ast> {
+fn gen_ctor_decl(node: Rc<NodeData>) -> Option<CtorDecl> {
     if node.node() != Node::CtorDecl {
         return None;
     }
 
     let name_opt = node.first_ident();
 
-    Some(Ast::CtorDecl { name_opt, node })
+    Some(CtorDecl { name_opt, node })
 }
 
-fn gen_stmt(node: Rc<NodeData>) -> Option<Ast> {
+fn gen_stmt(node: Rc<NodeData>) -> Option<Stmt> {
     match node.node() {
-        Node::MatchStmt => gen_match_stmt(node),
-        Node::EnumDecl => gen_enum_decl(node),
+        Node::MatchStmt => gen_match_stmt(node).map(Stmt::Match),
+        Node::EnumDecl => gen_enum_decl(node).map(Stmt::Enum),
         _ => {
             assert!(!node.node().is_stmt());
             None
@@ -162,16 +160,16 @@ fn gen_stmt(node: Rc<NodeData>) -> Option<Ast> {
     }
 }
 
-fn gen_stmts(node: Rc<NodeData>) -> Vec<Ast> {
+fn gen_stmts(node: Rc<NodeData>) -> Vec<Stmt> {
     node.filter_node(|child| child.node().is_stmt())
         .into_iter()
         .filter_map(|child| gen_stmt(child))
         .collect()
 }
 
-pub(crate) fn gen_root(node: Rc<NodeData>) -> Rc<Ast> {
+pub(crate) fn gen_root(node: Rc<NodeData>) -> Root {
     assert_eq!(node.node(), Node::Root);
 
     let stmts = gen_stmts(node.clone());
-    Rc::new(Ast::Root { stmts, node })
+    Root { stmts, node }
 }

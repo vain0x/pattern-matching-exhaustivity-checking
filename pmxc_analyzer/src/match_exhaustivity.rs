@@ -26,13 +26,13 @@ pub(crate) mod lower {
         pub(crate) errors: Vec<(TextRange, String)>,
     }
 
-    fn analyze_pat(ast: &Ast, ty: &Ty, m: &mut MatchExhaustivityModel) -> Option<Pattern> {
-        match ast {
-            Ast::DiscardPat { .. } => Some(Pattern::Discard),
-            Ast::CtorPat {
+    fn analyze_pat(pat: &Pat, ty: &Ty, m: &mut MatchExhaustivityModel) -> Option<Pattern> {
+        match pat {
+            Pat::Discard(..) => Some(Pattern::Discard),
+            Pat::Ctor(CtorPat {
                 name_opt: Some(ref name),
                 ..
-            } => {
+            }) => {
                 match (m.ty_database.find_constructor_by_name(name), ty) {
                     (Some((enum_name, _)), Ty::Enum { ref name }) if enum_name == name => {}
                     _ => return None,
@@ -45,13 +45,15 @@ pub(crate) mod lower {
         }
     }
 
-    fn analyze_expr(ast: &Ast, m: &MatchExhaustivityModel) -> Option<Ty> {
-        match ast {
-            Ast::CtorExpr {
+    fn analyze_expr(expr: &Expr, m: &MatchExhaustivityModel) -> Option<Ty> {
+        match expr {
+            Expr::Ctor(CtorExpr {
                 name_opt: Some(ref name),
                 ..
-            } => {
+            }) => {
+                // FIXME: 未定義の名前はエラーにする
                 let (enum_name, _) = m.ty_database.find_constructor_by_name(name)?;
+
                 Some(Ty::Enum {
                     name: enum_name.to_string(),
                 })
@@ -60,26 +62,23 @@ pub(crate) mod lower {
         }
     }
 
-    fn analyze_match_arm(ast: &Ast, ty: &Ty, m: &mut MatchExhaustivityModel) -> Option<MatchArm> {
-        match ast {
-            Ast::MatchArm {
-                pat_opt: Some(ref pat),
-                ..
-            } => {
-                let pattern = analyze_pat(pat, ty, m)?;
-                Some(MatchArm { pattern })
-            }
-            _ => None,
-        }
+    fn analyze_match_arm(
+        arm: &ast::MatchArm,
+        ty: &Ty,
+        m: &mut MatchExhaustivityModel,
+    ) -> Option<expressions::MatchArm> {
+        let pat = arm.pat_opt.as_ref()?;
+        let pattern = analyze_pat(pat, ty, m)?;
+        Some(expressions::MatchArm { pattern })
     }
 
-    fn analyze_stmt(ast: &Ast, m: &mut MatchExhaustivityModel) {
-        match ast {
-            Ast::MatchStmt {
+    fn analyze_stmt(stmt: &Stmt, m: &mut MatchExhaustivityModel) {
+        match stmt {
+            Stmt::Match(MatchStmt {
                 cond_opt: Some(ref cond),
                 ref arms,
                 ref node,
-            } => {
+            }) => {
                 let cond_ty = match analyze_expr(cond, m) {
                     Some(ty) => ty,
                     None => return,
@@ -104,21 +103,17 @@ pub(crate) mod lower {
                     range,
                 ));
             }
-            Ast::EnumDecl {
+            Stmt::Enum(EnumDecl {
                 name_opt: Some(ref name),
                 ctors,
                 ..
-            } => {
+            }) => {
                 let constructors = ctors
                     .iter()
-                    .filter_map(|ctor| match ctor {
-                        Ast::CtorDecl {
-                            name_opt: Some(ref name),
-                            ..
-                        } => Some(ConstructorDefinition {
-                            name: name.to_string(),
-                        }),
-                        _ => None,
+                    .filter_map(|ctor| {
+                        Some(ConstructorDefinition {
+                            name: ctor.name_opt.as_ref()?.to_string(),
+                        })
                     })
                     .collect();
 
@@ -127,18 +122,11 @@ pub(crate) mod lower {
                     constructors,
                 });
             }
-            Ast::Root { stmts, .. } => {
-                for stmt in stmts {
-                    analyze_stmt(stmt, m);
-                }
-            }
-            _ => {
-                // unexpected
-            }
+            _ => {}
         }
     }
 
-    pub(crate) fn from_ast(ast: &Ast, token_range_map: TokenRangeMap) -> MatchExhaustivityModel {
+    pub(crate) fn from_ast(root: &Root, token_range_map: TokenRangeMap) -> MatchExhaustivityModel {
         let mut m = MatchExhaustivityModel {
             ty_database: TyDatabase {
                 definitions: vec![],
@@ -148,7 +136,9 @@ pub(crate) mod lower {
             errors: vec![],
         };
 
-        analyze_stmt(ast, &mut m);
+        for stmt in root.stmts.iter() {
+            analyze_stmt(stmt, &mut m);
+        }
 
         m
     }

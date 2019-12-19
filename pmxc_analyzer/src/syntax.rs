@@ -18,7 +18,7 @@ pub(crate) mod tokenize_context;
 pub(crate) mod tokenize_rules;
 pub(crate) mod trivia;
 
-pub(crate) use ast::Ast;
+pub(crate) use ast::*;
 pub(crate) use element::Element;
 pub(crate) use node::{token_range_map::TokenRangeMap, Node, NodeData};
 pub(crate) use parse::parse;

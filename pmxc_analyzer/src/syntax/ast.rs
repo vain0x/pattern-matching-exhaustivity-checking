@@ -1,39 +1,70 @@
+//! 抽象構文木
+
 use super::*;
 use std::rc::Rc;
 
 #[derive(Debug)]
-pub(crate) enum Ast {
-    DiscardPat {
-        node: Rc<NodeData>,
-    },
-    CtorPat {
-        name_opt: Option<String>,
-        node: Rc<NodeData>,
-    },
-    CtorExpr {
-        name_opt: Option<String>,
-        node: Rc<NodeData>,
-    },
-    MatchStmt {
-        cond_opt: Option<Box<Ast>>,
-        arms: Vec<Ast>,
-        node: Rc<NodeData>,
-    },
-    MatchArm {
-        pat_opt: Option<Box<Ast>>,
-        node: Rc<NodeData>,
-    },
-    EnumDecl {
-        name_opt: Option<String>,
-        ctors: Vec<Ast>,
-        node: Rc<NodeData>,
-    },
-    CtorDecl {
-        name_opt: Option<String>,
-        node: Rc<NodeData>,
-    },
-    Root {
-        stmts: Vec<Ast>,
-        node: Rc<NodeData>,
-    },
+pub(crate) struct DiscardPat {
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
+pub(crate) struct CtorPat {
+    pub(crate) name_opt: Option<String>,
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
+pub(crate) enum Pat {
+    Discard(DiscardPat),
+    Ctor(CtorPat),
+}
+
+#[derive(Debug)]
+pub(crate) struct CtorExpr {
+    pub(crate) name_opt: Option<String>,
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
+pub(crate) enum Expr {
+    Ctor(CtorExpr),
+}
+
+#[derive(Debug)]
+pub(crate) struct MatchArm {
+    pub(crate) pat_opt: Option<Pat>,
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
+pub(crate) struct MatchStmt {
+    pub(crate) cond_opt: Option<Expr>,
+    pub(crate) arms: Vec<MatchArm>,
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
+pub(crate) struct CtorDecl {
+    pub(crate) name_opt: Option<String>,
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
+pub(crate) struct EnumDecl {
+    pub(crate) name_opt: Option<String>,
+    pub(crate) ctors: Vec<CtorDecl>,
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
+pub(crate) enum Stmt {
+    Match(MatchStmt),
+    Enum(EnumDecl),
+}
+
+#[derive(Debug)]
+pub(crate) struct Root {
+    pub(crate) stmts: Vec<Stmt>,
+    pub(crate) node: Rc<NodeData>,
 }
