@@ -44,8 +44,8 @@ pub(crate) fn space_to_pattern(space: Space, td: &TyDatabase) -> Option<Pattern>
         }
         Space::Union(spaces) => spaces
             .into_iter()
-            .next()
-            .and_then(|space| space_to_pattern(space, td)),
+            .filter_map(|space| space_to_pattern(space, td))
+            .next(),
 
         Space::Ty(ty) => ty_to_pattern(&ty, td),
     }
