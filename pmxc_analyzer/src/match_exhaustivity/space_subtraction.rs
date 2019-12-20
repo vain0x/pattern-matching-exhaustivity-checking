@@ -102,11 +102,11 @@ pub(crate) fn space_subtraction(mut first: Space, mut second: Space, td: &TyData
             // 残りのケースとして考えられるのは「.0 が true でない」または「.1 が false でない」。
             // この「～でない」を引き算で、「または」をユニオンで表している。
             let mut spaces = vec![];
-            for i in 0..first_args.len() {
+            for t in 0..first_args.len() {
                 let mut args = vec![];
 
-                for j in 0..second_args.len() {
-                    args.push(if i == j {
+                for i in 0..first_args.len() {
+                    args.push(if i == t {
                         space_subtraction(first_args[i].clone(), second_args[i].clone(), td)
                     } else {
                         first_args[i].clone()
