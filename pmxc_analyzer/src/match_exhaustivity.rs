@@ -14,6 +14,31 @@ pub(crate) use patterns::Pattern;
 pub(crate) use space::Space;
 pub(crate) use ty_system::{ConstructorDefinition, Ty, TyDatabase, TyDefinition};
 
+pub(crate) mod display {
+    use super::*;
+    use std::fmt::{self, Display, Formatter};
+
+    impl Display for Pattern {
+        fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+            match self {
+                Pattern::Discard { .. } => write!(f, "_"),
+                Pattern::Constructor { name, args } if args.is_empty() => write!(f, "{}", name),
+                Pattern::Constructor { name, args } => {
+                    write!(f, "{}(", name)?;
+                    for (i, arg) in args.iter().enumerate() {
+                        if i != 0 {
+                            write!(f, ", ")?;
+                        }
+
+                        write!(f, "{}", arg)?;
+                    }
+                    write!(f, ")")
+                }
+            }
+        }
+    }
+}
+
 /// 抽象構文木から網羅性検査用の中間表現を生成する。
 /// (網羅性検査アルゴリズムとは無関係。)
 pub(crate) mod lower {
@@ -273,7 +298,7 @@ pub(crate) mod lower {
             if !ok {
                 let range = range.clone();
                 let message = match pattern {
-                    Some(pattern) => format!("網羅的ではありません (例: {:?})", pattern),
+                    Some(pattern) => format!("網羅的ではありません (例: {})", pattern),
                     None => "網羅的ではありません".to_string(),
                 };
 
