@@ -3,7 +3,7 @@
 use super::*;
 
 /// パターン
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(crate) enum Pattern {
     /// `_`
     Discard { ty: Ty },

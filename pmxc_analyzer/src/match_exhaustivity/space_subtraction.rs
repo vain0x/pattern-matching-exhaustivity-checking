@@ -89,7 +89,7 @@ pub(crate) fn space_subtraction(mut first: Space, mut second: Space, td: &TyData
                 return Space::new_empty();
             }
 
-            // いずれかの引数のスペースが直交していたら元に戻る。
+            // いずれかの引数のスペースが直交していたら何もしない。
             // (これも最後のケースの特別な場合を効率よく処理するもの、だと思う。)
             // FIXME: 実装
 

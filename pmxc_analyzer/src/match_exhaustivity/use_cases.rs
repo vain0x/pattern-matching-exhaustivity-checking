@@ -1,9 +1,13 @@
 use super::space_from_pattern::space_from_pattern;
 use super::space_from_ty::space_from_ty;
 use super::space_subtraction::space_subtraction;
+use super::space_to_pattern::space_to_pattern;
 use super::*;
 
-pub(crate) fn is_exhaustive(expression: &MatchExpression, td: &TyDatabase) -> bool {
+pub(crate) fn check_exhaustivity(
+    expression: &MatchExpression,
+    td: &TyDatabase,
+) -> (bool, Option<Pattern>) {
     // 条件式が作るスペース。
     let ty_space = space_from_ty(expression.condition_ty.clone());
 
@@ -19,7 +23,17 @@ pub(crate) fn is_exhaustive(expression: &MatchExpression, td: &TyDatabase) -> bo
     let leaked_space = space_subtraction(ty_space, pat_space, td);
 
     // スペースが残らなければ網羅的といえる。
-    leaked_space.is_empty()
+    let ok = leaked_space.is_empty();
+
+    // マッチしないケースの例を1つ構築する。
+    let leaked_pattern = space_to_pattern(leaked_space, td);
+
+    (ok, leaked_pattern)
+}
+
+pub(crate) fn is_exhaustive(expression: &MatchExpression, td: &TyDatabase) -> bool {
+    let (ok, _) = check_exhaustivity(expression, td);
+    ok
 }
 
 // -----------------------------------------------
@@ -59,9 +73,7 @@ mod tests {
 
         // match bool_value { true => {}, false => {} }
         let match_expression = MatchExpression {
-            condition_ty: Ty::Enum {
-                name: "Boolean".to_string(),
-            },
+            condition_ty: boolean_ty,
             arms: vec![
                 MatchArm {
                     pattern: Pattern::Constructor {

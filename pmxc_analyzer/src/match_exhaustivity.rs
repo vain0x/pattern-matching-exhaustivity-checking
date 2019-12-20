@@ -5,6 +5,7 @@ pub(crate) mod space_from_pattern;
 pub(crate) mod space_from_ty;
 pub(crate) mod space_intersection;
 pub(crate) mod space_subtraction;
+pub(crate) mod space_to_pattern;
 pub(crate) mod ty_system;
 pub(crate) mod use_cases;
 
@@ -267,11 +268,16 @@ pub(crate) mod lower {
     pub(crate) fn check(model: &mut MatchExhaustivityModel) {
         for i in 0..model.match_expressions.len() {
             let (match_expression, range) = &model.match_expressions[i];
-            if !use_cases::is_exhaustive(match_expression, &model.ty_database) {
+            let (ok, pattern) = use_cases::check_exhaustivity(match_expression, &model.ty_database);
+
+            if !ok {
                 let range = range.clone();
-                model
-                    .errors
-                    .push((range, "網羅的ではありません".to_string()));
+                let message = match pattern {
+                    Some(pattern) => format!("網羅的ではありません (例: {:?})", pattern),
+                    None => "網羅的ではありません".to_string(),
+                };
+
+                model.errors.push((range, message));
             }
         }
     }
