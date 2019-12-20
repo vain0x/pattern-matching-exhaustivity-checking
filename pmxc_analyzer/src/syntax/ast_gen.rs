@@ -5,11 +5,11 @@ use std::rc::Rc;
 
 impl Node {
     pub(crate) fn is_pat(self) -> bool {
-        self == Node::Name || self == Node::Group
+        self == Node::Name || self == Node::Group || self == Node::Call
     }
 
     pub(crate) fn is_expr(self) -> bool {
-        self == Node::Name || self == Node::Group
+        self == Node::Name || self == Node::Group || self == Node::Call
     }
 
     pub(crate) fn is_stmt(self) -> bool {
@@ -67,11 +67,33 @@ fn gen_pat(node: Rc<NodeData>) -> Option<Pat> {
             }
 
             let name_opt = node.first_ident();
-            Some(Pat::Ctor(CtorPat { name_opt, node }))
+            Some(Pat::Ctor(CtorPat {
+                name_opt,
+                tuple_opt: None,
+                node,
+            }))
         }
         Node::Group => node
             .first_node(|child| child.node().is_pat())
             .and_then(gen_pat),
+        Node::Call => {
+            let name_opt = node
+                .first_node(|node| node.node() == Node::Name)
+                .and_then(|name| name.first_ident());
+
+            let fields = node
+                .filter_node(|node| node.node() == Node::Argument)
+                .into_iter()
+                .filter_map(|arg| arg.first_node(|node| node.node().is_pat()))
+                .filter_map(gen_pat)
+                .collect();
+
+            Some(Pat::Ctor(CtorPat {
+                name_opt,
+                tuple_opt: Some(fields),
+                node,
+            }))
+        }
         _ => None,
     }
 }
@@ -82,11 +104,33 @@ fn gen_expr(node: Rc<NodeData>) -> Option<Expr> {
     match node.node() {
         Node::Name => {
             let name_opt = node.first_ident();
-            Some(Expr::Ctor(CtorExpr { name_opt, node }))
+            Some(Expr::Ctor(CtorExpr {
+                name_opt,
+                tuple_opt: None,
+                node,
+            }))
         }
         Node::Group => node
             .first_node(|child| child.node().is_expr())
             .and_then(gen_expr),
+        Node::Call => {
+            let name_opt = node
+                .first_node(|node| node.node() == Node::Name)
+                .and_then(|name| name.first_ident());
+
+            let fields = node
+                .filter_node(|node| node.node() == Node::Argument)
+                .into_iter()
+                .filter_map(|arg| arg.first_node(|node| node.node().is_expr()))
+                .filter_map(gen_expr)
+                .collect();
+
+            Some(Expr::Ctor(CtorExpr {
+                name_opt,
+                tuple_opt: Some(fields),
+                node,
+            }))
+        }
         _ => None,
     }
 }
@@ -146,7 +190,27 @@ fn gen_ctor_decl(node: Rc<NodeData>) -> Option<CtorDecl> {
 
     let name_opt = node.first_ident();
 
-    Some(CtorDecl { name_opt, node })
+    let tuple_decl_opt = node
+        .first_node(|child| child.node() == Node::TupleDecl)
+        .map(|tuple_decl| TupleDecl {
+            fields: tuple_decl
+                .filter_node(|child| child.node() == Node::TupleFieldDecl)
+                .into_iter()
+                .map(|field| Ty {
+                    name_opt: field
+                        .first_node(|node| node.node() == Node::Name)
+                        .and_then(|name| name.first_ident()),
+                    node: field,
+                })
+                .collect(),
+            node: tuple_decl,
+        });
+
+    Some(CtorDecl {
+        name_opt,
+        tuple_decl_opt,
+        node,
+    })
 }
 
 fn gen_stmt(node: Rc<NodeData>) -> Option<Stmt> {

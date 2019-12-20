@@ -1,0 +1,54 @@
+enum Boolean {
+    True,
+    False,
+}
+
+match True {
+    True => {
+        // YES
+    }
+    False => {
+        // NO
+    }
+}
+
+match True {
+    True => {}
+}
+
+match False {
+    _ => {}
+}
+
+enum Digit {
+    One,
+    Two(Boolean),
+}
+
+match Two(True) {
+    _ => {}
+}
+
+match Two(True) {
+    One => {}
+    Two(True) => {}
+    Two(False) => {}
+}
+
+match Two(True) {
+    One => {}
+    Two(True) => {}
+}
+
+match Two(True) {
+    One => {}
+    Two(_) => {}
+}
+
+match Two() {
+    Two() => {}
+}
+
+enum Foo {
+    Bar(Hoge),
+}

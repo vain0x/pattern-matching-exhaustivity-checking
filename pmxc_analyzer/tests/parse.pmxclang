@@ -19,3 +19,13 @@ match True {
 match False {
     _ => {}
 }
+
+enum Digit {
+    One(),
+    Two(Boolean),
+}
+
+match Two(False) {
+    One() => {}
+    Two(_) => {}
+}

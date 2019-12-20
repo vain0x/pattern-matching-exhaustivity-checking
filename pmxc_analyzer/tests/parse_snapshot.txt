@@ -183,8 +183,134 @@ N(Root) [
         ]
         T(RightBrace) "}"
     ]
-    v [
-        T(Eol) "\n"
+    N(EnumDecl) [
+        v [
+            T(Eol) "\n"
+            T(Eol) "\n"
+        ]
+        T(Enum) "enum"
+        ^ [
+            T(Space) " "
+        ]
+        T(Ident) "Digit"
+        ^ [
+            T(Space) " "
+        ]
+        T(LeftBrace) "{"
+        N(CtorDecl) [
+            v [
+                T(Eol) "\n"
+                T(Space) "    "
+            ]
+            T(Ident) "One"
+            N(TupleDecl) [
+                T(LeftParen) "("
+                T(RightParen) ")"
+            ]
+        ]
+        T(Comma) ","
+        N(CtorDecl) [
+            v [
+                T(Eol) "\n"
+                T(Space) "    "
+            ]
+            T(Ident) "Two"
+            N(TupleDecl) [
+                T(LeftParen) "("
+                N(TupleFieldDecl) [
+                    N(Name) [
+                        T(Ident) "Boolean"
+                    ]
+                ]
+                T(RightParen) ")"
+            ]
+        ]
+        T(Comma) ","
+        v [
+            T(Eol) "\n"
+        ]
+        T(RightBrace) "}"
+    ]
+    N(MatchStmt) [
+        v [
+            T(Eol) "\n"
+            T(Eol) "\n"
+        ]
+        T(Match) "match"
+        ^ [
+            T(Space) " "
+        ]
+        N(Call) [
+            N(Name) [
+                T(Ident) "Two"
+            ]
+            T(LeftParen) "("
+            N(Argument) [
+                N(Name) [
+                    T(Ident) "False"
+                ]
+            ]
+            T(RightParen) ")"
+            ^ [
+                T(Space) " "
+            ]
+        ]
+        T(LeftBrace) "{"
+        N(MatchArm) [
+            N(Call) [
+                N(Name) [
+                    v [
+                        T(Eol) "\n"
+                        T(Space) "    "
+                    ]
+                    T(Ident) "One"
+                ]
+                T(LeftParen) "("
+                T(RightParen) ")"
+                ^ [
+                    T(Space) " "
+                ]
+            ]
+            T(Equal) "="
+            T(RightAngle) ">"
+            ^ [
+                T(Space) " "
+            ]
+            T(LeftBrace) "{"
+            T(RightBrace) "}"
+        ]
+        N(MatchArm) [
+            N(Call) [
+                N(Name) [
+                    v [
+                        T(Eol) "\n"
+                        T(Space) "    "
+                    ]
+                    T(Ident) "Two"
+                ]
+                T(LeftParen) "("
+                N(Argument) [
+                    N(Name) [
+                        T(Underscore) "_"
+                    ]
+                ]
+                T(RightParen) ")"
+                ^ [
+                    T(Space) " "
+                ]
+            ]
+            T(Equal) "="
+            T(RightAngle) ">"
+            ^ [
+                T(Space) " "
+            ]
+            T(LeftBrace) "{"
+            T(RightBrace) "}"
+        ]
+        v [
+            T(Eol) "\n"
+        ]
+        T(RightBrace) "}"
     ]
     T(Eof) ""
 ]

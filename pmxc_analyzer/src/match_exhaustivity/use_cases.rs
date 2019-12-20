@@ -12,7 +12,7 @@ pub(crate) fn is_exhaustive(expression: &MatchExpression, td: &TyDatabase) -> bo
         expression
             .arms
             .iter()
-            .map(|arm| space_from_pattern(arm.pattern.clone(), expression.condition_ty.clone())),
+            .map(|arm| space_from_pattern(arm.pattern.clone())),
     );
 
     // 条件式のスペースからアーム全体のスペースを引く。
@@ -38,9 +38,11 @@ mod tests {
             constructors: vec![
                 ConstructorDefinition {
                     name: "False".to_string(),
+                    arg_tys: vec![],
                 },
                 ConstructorDefinition {
                     name: "True".to_string(),
+                    arg_tys: vec![],
                 },
             ],
         });
@@ -51,6 +53,9 @@ mod tests {
     #[test]
     fn test_boolean_exhaustive_by_enumeration() {
         let td = new_ty_database();
+        let boolean_ty = Ty::Enum {
+            name: "Boolean".to_string(),
+        };
 
         // match bool_value { true => {}, false => {} }
         let match_expression = MatchExpression {
@@ -61,11 +66,15 @@ mod tests {
                 MatchArm {
                     pattern: Pattern::Constructor {
                         name: "True".to_string(),
+                        args: vec![],
+                        ty: boolean_ty.clone(),
                     },
                 },
                 MatchArm {
                     pattern: Pattern::Constructor {
                         name: "False".to_string(),
+                        args: vec![],
+                        ty: boolean_ty.clone(),
                     },
                 },
             ],
@@ -77,20 +86,25 @@ mod tests {
     #[test]
     fn test_boolean_exhaustive_by_discard() {
         let td = new_ty_database();
+        let boolean_ty = Ty::Enum {
+            name: "Boolean".to_string(),
+        };
 
         // match bool_value { true => {}, _ => {} }
         let match_expression = MatchExpression {
-            condition_ty: Ty::Enum {
-                name: "Boolean".to_string(),
-            },
+            condition_ty: boolean_ty.clone(),
             arms: vec![
                 MatchArm {
                     pattern: Pattern::Constructor {
                         name: "True".to_string(),
+                        args: vec![],
+                        ty: boolean_ty.clone(),
                     },
                 },
                 MatchArm {
-                    pattern: Pattern::Discard,
+                    pattern: Pattern::Discard {
+                        ty: boolean_ty.clone(),
+                    },
                 },
             ],
         };
@@ -101,15 +115,18 @@ mod tests {
     #[test]
     fn test_boolean_nonexhaustive_leaking_false() {
         let td = new_ty_database();
+        let boolean_ty = Ty::Enum {
+            name: "Boolean".to_string(),
+        };
 
         // match bool_value { true => {} }
         let match_expression = MatchExpression {
-            condition_ty: Ty::Enum {
-                name: "Boolean".to_string(),
-            },
+            condition_ty: boolean_ty.clone(),
             arms: vec![MatchArm {
                 pattern: Pattern::Constructor {
                     name: "True".to_string(),
+                    args: vec![],
+                    ty: boolean_ty.clone(),
                 },
             }],
         };

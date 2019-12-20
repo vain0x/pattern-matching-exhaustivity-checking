@@ -41,6 +41,11 @@ pub(crate) fn space_decompose(space: Space, td: &TyDatabase) -> Space {
 
             Space::Constructor {
                 name: constructor_definition.name.to_string(),
+                args: constructor_definition
+                    .arg_tys
+                    .iter()
+                    .map(|arg_ty| space_from_ty(arg_ty.clone()))
+                    .collect(),
             }
         }
         _ => unreachable!(),
@@ -59,9 +64,11 @@ mod tests {
             constructors: vec![
                 ConstructorDefinition {
                     name: "False".to_string(),
+                    arg_tys: vec![],
                 },
                 ConstructorDefinition {
                     name: "True".to_string(),
+                    arg_tys: vec![],
                 },
             ],
         });
@@ -107,7 +114,7 @@ mod tests {
         let decomposed_space = space_decompose(ty_space, &td);
 
         let name = match decomposed_space {
-            Space::Constructor { ref name } => name.as_str(),
+            Space::Constructor { ref name, .. } => name.as_str(),
             _ => unreachable!("コンストラクタスペースのはず"),
         };
         assert_eq!(name, "True");

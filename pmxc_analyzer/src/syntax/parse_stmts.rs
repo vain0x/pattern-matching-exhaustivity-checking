@@ -5,12 +5,43 @@ use super::*;
 
 impl Token {
     pub(crate) fn is_stmt_first(self) -> bool {
-        self == Token::Let
-            || self == Token::Match
-            || self == Token::Enum
-            || self == Token::Struct
-            || self.is_expr_first()
+        self == Token::Match || self == Token::Enum || self.is_expr_first()
     }
+}
+
+fn parse_name(p: &mut ParseContext) -> NodeData {
+    let mut node = NodeData::new();
+    p.eat(&mut node, Token::Ident);
+    node.set_node(Node::Name)
+}
+
+fn parse_tuple_decl(p: &mut ParseContext) -> Option<NodeData> {
+    if p.next() != Token::LeftParen {
+        return None;
+    }
+
+    let mut node = NodeData::new();
+    p.bump(&mut node);
+
+    let mut boundary = true;
+    while p.next() == Token::Ident {
+        if !boundary && !p.at_eol() {
+            node.push_error(ParseError::ExpectedCommaOrEol);
+        }
+
+        let mut field = NodeData::new();
+        let ty = parse_name(p);
+        field.push_node(ty);
+        node.push_node(field.set_node(Node::TupleFieldDecl));
+
+        boundary = p.eat(&mut node, Token::Comma);
+    }
+
+    if !p.eat(&mut node, Token::RightParen) {
+        node.push_error(ParseError::ExpectedRightParen);
+    }
+
+    Some(node.set_node(Node::TupleDecl))
 }
 
 pub(crate) fn parse_ctor_decl(p: &mut ParseContext) -> Option<NodeData> {
@@ -20,6 +51,11 @@ pub(crate) fn parse_ctor_decl(p: &mut ParseContext) -> Option<NodeData> {
 
     let mut node = NodeData::new();
     p.bump(&mut node);
+
+    if let Some(tuple_decl) = parse_tuple_decl(p) {
+        node.push_node(tuple_decl);
+    }
+
     Some(node.set_node(Node::CtorDecl))
 }
 
@@ -45,14 +81,6 @@ fn parse_match_arm(p: &mut ParseContext) -> Option<NodeData> {
 
 pub(crate) fn parse_stmt(p: &mut ParseContext) -> Option<NodeData> {
     match p.next() {
-        Token::Let => {
-            let mut node = NodeData::new();
-            p.bump(&mut node);
-
-            // FIXME: 実装
-
-            Some(node.set_node(Node::LetStmt))
-        }
         Token::Match => {
             let mut node = NodeData::new();
             p.bump(&mut node);
@@ -102,14 +130,6 @@ pub(crate) fn parse_stmt(p: &mut ParseContext) -> Option<NodeData> {
             }
 
             Some(node.set_node(Node::EnumDecl))
-        }
-        Token::Struct => {
-            let mut node = NodeData::new();
-            p.bump(&mut node);
-
-            // FIXME: 実装
-
-            Some(node.set_node(Node::StructDecl))
         }
         _ => {
             if let Some(expr) = parse_expr(p) {

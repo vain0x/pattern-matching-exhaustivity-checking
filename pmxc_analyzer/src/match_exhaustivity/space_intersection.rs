@@ -23,13 +23,13 @@ pub(crate) fn space_intersection(mut first: Space, mut second: Space, td: &TyDat
         // 型 T のスペースと、それに含まれるコンストラクタ K のスペースの交差は、
         // コンストラクタ K に絞られる。
         // (K ⊂ T → K∩T = K)
-        (Space::Ty(ref ty), Space::Constructor { ref name })
+        (Space::Ty(ref ty), Space::Constructor { ref name, .. })
             if td.is_subtype_of_constructor(ty, name) =>
         {
             second
         }
         // 左右対称
-        (Space::Constructor { ref name }, Space::Ty(ty))
+        (Space::Constructor { ref name, .. }, Space::Ty(ty))
             if td.is_subtype_of_constructor(ty, name) =>
         {
             first
@@ -49,10 +49,12 @@ pub(crate) fn space_intersection(mut first: Space, mut second: Space, td: &TyDat
         (_, Space::Union(..)) => space_intersection(second, first, td),
 
         // 同じコンストラクタ同士の交差は、各フィールドの交差をとる。
+        // FIXME: 実装
         (
-            Space::Constructor { ref name },
+            Space::Constructor { ref name, .. },
             Space::Constructor {
                 name: ref second_name,
+                ..
             },
         ) if name == second_name => first,
 

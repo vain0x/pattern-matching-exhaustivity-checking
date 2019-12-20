@@ -21,14 +21,15 @@ pub(crate) fn space_subtraction(mut first: Space, mut second: Space, td: &TyData
 
         // コンストラクタ型スペースからコンストラクタスペースを引く。
         // 左辺をコンストラクタスペースにばらすだけ。
-        (Space::Ty(ref mut ty), Space::Constructor { ref name })
+        // FIXME: 実装
+        (Space::Ty(ref mut ty), Space::Constructor { ref name, .. })
             if ty.is_constructor_of_name(name) =>
         {
             let name = match std::mem::replace(ty, Ty::default()) {
                 Ty::Constructor { name } => name,
                 _ => unreachable!(),
             };
-            let first = Space::Constructor { name };
+            let first = Space::Constructor { name, args: vec![] };
             space_subtraction(first, second, td)
         }
 
@@ -51,19 +52,73 @@ pub(crate) fn space_subtraction(mut first: Space, mut second: Space, td: &TyData
         }
 
         // コンストラクタスペースから、そのコンストラクタを含む型のスペースを引くと、空になる。
-        (Space::Constructor { ref name }, Space::Ty(ref ty)) if ty.is_constructor_of_name(name) => {
+        (Space::Constructor { ref name, .. }, Space::Ty(ref ty))
+            if ty.is_constructor_of_name(name) =>
+        {
             Space::new_empty()
         }
 
         // コンストラクタが等しいコンストラクタスペースを引く。
         (
-            Space::Constructor { ref name },
+            Space::Constructor {
+                ref mut name,
+                args: ref mut first_args,
+            },
             Space::Constructor {
                 name: ref second_name,
+                args: ref mut second_args,
             },
         ) if name == second_name => {
-            // FIXME: 引数
-            Space::new_empty()
+            let name = std::mem::replace(name, String::default());
+            let first_args = std::mem::replace(first_args, vec![]);
+            let second_args = std::mem::replace(second_args, vec![]);
+
+            debug_assert_eq!(
+                first_args.len(),
+                second_args.len(),
+                "同じコンストラクタの引数の個数は一致するはず"
+            );
+
+            // すべての引数がカバーされているなら空になる。
+            // (これは最後のケースの特別な場合を効率よく処理するもの、だと思う。)
+            let all_are_covered =
+                first_args
+                    .iter()
+                    .zip(second_args.iter())
+                    .all(|(first, second)| {
+                        let leak = space_subtraction(first.clone(), second.clone(), td);
+                        leak.is_empty()
+                    });
+            if all_are_covered {
+                return Space::new_empty();
+            }
+
+            // いずれかの引数のスペースが直交していたら元に戻る。
+            // (これも最後のケースの特別な場合を効率よく処理するもの、だと思う。)
+            // FIXME: 実装
+
+            // いずれかの引数スペースの差を取って、残りはそのまま、というスペースの和を作る。
+            // 例えば型 (bool, bool) のパターンマッチで (true, false) というケースがあるとき、
+            // 残りのケースとして考えられるのは「.0 が true でない」または「.1 が false でない」。
+            // この「～でない」を引き算で、「または」をユニオンで表している。
+            let mut spaces = vec![];
+            for i in 0..first_args.len() {
+                let mut args = vec![];
+
+                for j in 0..second_args.len() {
+                    args.push(if i == j {
+                        space_subtraction(first_args[i].clone(), second_args[i].clone(), td)
+                    } else {
+                        first_args[i].clone()
+                    });
+                }
+
+                spaces.push(Space::Constructor {
+                    name: name.to_string(),
+                    args,
+                });
+            }
+            Space::new_union(spaces)
         }
 
         // 型スペースを分解して差をとる。

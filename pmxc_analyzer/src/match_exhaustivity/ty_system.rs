@@ -44,6 +44,7 @@ pub(crate) enum TyDefinition {
 /// コンストラクタ定義
 pub(crate) struct ConstructorDefinition {
     pub(crate) name: String,
+    pub(crate) arg_tys: Vec<Ty>,
 }
 
 /// 型に関する知識を提供する。

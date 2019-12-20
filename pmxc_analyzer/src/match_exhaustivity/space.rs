@@ -6,6 +6,7 @@ pub(crate) enum Space {
     /// コンストラクタ
     Constructor {
         name: String,
+        args: Vec<Space>,
     },
 
     Union(Vec<Space>),

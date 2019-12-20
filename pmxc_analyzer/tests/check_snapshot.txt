@@ -1,0 +1,67 @@
+[
+    (
+        TextRange {
+            start: TextPosition {
+                line: 49,
+                character: 5,
+            },
+            end: TextPosition {
+                line: 49,
+                character: 8,
+            },
+        },
+        "引数の数が異なります (0 → 1)",
+    ),
+    (
+        TextRange {
+            start: TextPosition {
+                line: 53,
+                character: 9,
+            },
+            end: TextPosition {
+                line: 53,
+                character: 13,
+            },
+        },
+        "定義されていません",
+    ),
+    (
+        TextRange {
+            start: TextPosition {
+                line: 15,
+                character: 1,
+            },
+            end: TextPosition {
+                line: 15,
+                character: 6,
+            },
+        },
+        "網羅的ではありません",
+    ),
+    (
+        TextRange {
+            start: TextPosition {
+                line: 38,
+                character: 1,
+            },
+            end: TextPosition {
+                line: 38,
+                character: 6,
+            },
+        },
+        "網羅的ではありません",
+    ),
+    (
+        TextRange {
+            start: TextPosition {
+                line: 48,
+                character: 1,
+            },
+            end: TextPosition {
+                line: 48,
+                character: 6,
+            },
+        },
+        "網羅的ではありません",
+    ),
+]

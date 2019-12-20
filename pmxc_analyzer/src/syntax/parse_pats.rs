@@ -56,6 +56,31 @@ pub(crate) fn parse_pat_atom(p: &mut ParseContext) -> Option<NodeData> {
     }
 }
 
+pub(crate) fn parse_pat_call(p: &mut ParseContext) -> Option<NodeData> {
+    let mut callee = parse_pat_atom(p)?;
+
+    if p.next() == Token::LeftParen {
+        // FIXME: callee が識別子でなければ構文エラー
+        let mut node = NodeData::new_before(callee);
+        p.bump(&mut node);
+
+        while let Some(arg) = parse_pat(p) {
+            let arg = NodeData::new_before(arg);
+            node.push_node(arg.set_node(Node::Argument));
+
+            p.eat(&mut node, Token::Comma);
+        }
+
+        if !p.eat(&mut node, Token::RightParen) {
+            node.push_error(ParseError::ExpectedRightParen);
+        }
+
+        callee = node.set_node(Node::Call);
+    }
+
+    Some(callee)
+}
+
 pub(crate) fn parse_pat(p: &mut ParseContext) -> Option<NodeData> {
-    parse_pat_atom(p)
+    parse_pat_call(p)
 }

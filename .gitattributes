@@ -1,2 +1,2 @@
 * text=auto
-*.pmxclang text eol=lf
+*.pmxclang text linguist-language=rust eol=lf

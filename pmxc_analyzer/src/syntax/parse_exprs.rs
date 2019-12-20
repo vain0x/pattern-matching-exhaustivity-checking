@@ -48,11 +48,36 @@ pub(crate) fn parse_atom(p: &mut ParseContext) -> Option<NodeData> {
     }
 }
 
+pub(crate) fn parse_call(p: &mut ParseContext) -> Option<NodeData> {
+    let mut callee = parse_atom(p)?;
+
+    while p.next() == Token::LeftParen {
+        // FIXME: callee が識別子でなければ構文エラー
+        let mut node = NodeData::new_before(callee);
+        p.bump(&mut node);
+
+        while let Some(arg) = parse_expr(p) {
+            let arg = NodeData::new_before(arg);
+            node.push_node(arg.set_node(Node::Argument));
+
+            p.eat(&mut node, Token::Comma);
+        }
+
+        if !p.eat(&mut node, Token::RightParen) {
+            node.push_error(ParseError::ExpectedRightParen);
+        }
+
+        callee = node.set_node(Node::Call);
+    }
+
+    Some(callee)
+}
+
 /// `K {}` 形式のデータ構築以外の式をパースする。
 pub(crate) fn parse_cond(p: &mut ParseContext) -> Option<NodeData> {
-    parse_atom(p)
+    parse_call(p)
 }
 
 pub(crate) fn parse_expr(p: &mut ParseContext) -> Option<NodeData> {
-    parse_atom(p)
+    parse_call(p)
 }

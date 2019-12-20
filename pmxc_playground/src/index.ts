@@ -9,6 +9,11 @@ enum Boolean {
     True,
 }
 
+enum Digit {
+    One,
+    Two(Boolean),
+}
+
 // OK: 網羅的
 match Unit {
     Unit => {}
@@ -19,9 +24,6 @@ match Unit {
     _ => {}
 }
 
-// NG: 非網羅的
-match Unit {}
-
 // OK: 網羅的
 match True {
     True => {}
@@ -35,6 +37,19 @@ match True {
 }
 
 // OK: 網羅的
+match One {
+    One => {}
+    Two(_) => {}
+}
+
+// OK: 網羅的
+match One {
+    One => {}
+    Two(True) => {}
+    Two(False) => {}
+}
+
+// OK: 網羅的 (冗長)
 match True {
     True => {}
     False => {}
@@ -43,14 +58,31 @@ match True {
 }
 
 // NG: 非網羅的
+match Unit {}
+
+// NG: 非網羅的
 match True {
     True => {}
     // False => {}
 }
 
+// NG: 非網羅的
+match One {
+    One => {}
+    Two(True) => {}
+    // Two(False) => {}
+}
+
+// その他
+
 // NG: 型の異なるコンストラクタ
 match Unit {
     True => {}
+}
+
+// NG: 存在しない型名
+enum UsingNonExistingType {
+    UsingNonExistingConstructor(NonExistingType),
 }
 
 // NG: 存在しないコンストラクタのパターン
@@ -61,6 +93,19 @@ match Unit {
 // NG: 存在しないコンストラクタの式
 match NonExistingConstructor {
     _ => {}
+}
+
+// NG: 引数の数が異なるパターン
+match One {
+    One(True) => {}
+    Two => {}
+    Two() => {}
+    Two(True, True) => {}
+}
+
+// NG: 引数の型が異なるパターン
+match One {
+    Two(One) => {}
 }
 `
 

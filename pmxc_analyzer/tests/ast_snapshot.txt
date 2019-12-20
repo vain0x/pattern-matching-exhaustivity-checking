@@ -10,12 +10,14 @@ Root {
                         name_opt: Some(
                             "True",
                         ),
+                        tuple_decl_opt: None,
                         node: NodeData(..),
                     },
                     CtorDecl {
                         name_opt: Some(
                             "False",
                         ),
+                        tuple_decl_opt: None,
                         node: NodeData(..),
                     },
                 ],
@@ -30,6 +32,7 @@ Root {
                             name_opt: Some(
                                 "True",
                             ),
+                            tuple_opt: None,
                             node: NodeData(..),
                         },
                     ),
@@ -42,6 +45,7 @@ Root {
                                     name_opt: Some(
                                         "True",
                                     ),
+                                    tuple_opt: None,
                                     node: NodeData(..),
                                 },
                             ),
@@ -55,6 +59,7 @@ Root {
                                     name_opt: Some(
                                         "False",
                                     ),
+                                    tuple_opt: None,
                                     node: NodeData(..),
                                 },
                             ),
@@ -73,6 +78,7 @@ Root {
                             name_opt: Some(
                                 "True",
                             ),
+                            tuple_opt: None,
                             node: NodeData(..),
                         },
                     ),
@@ -85,6 +91,7 @@ Root {
                                     name_opt: Some(
                                         "True",
                                     ),
+                                    tuple_opt: None,
                                     node: NodeData(..),
                                 },
                             ),
@@ -103,6 +110,7 @@ Root {
                             name_opt: Some(
                                 "False",
                             ),
+                            tuple_opt: None,
                             node: NodeData(..),
                         },
                     ),
@@ -115,6 +123,144 @@ Root {
                                     node: NodeData(..),
                                 },
                             ),
+                        ),
+                        node: NodeData(..),
+                    },
+                ],
+                node: NodeData(..),
+            },
+        ),
+        Enum(
+            EnumDecl {
+                name_opt: Some(
+                    "Digit",
+                ),
+                ctors: [
+                    CtorDecl {
+                        name_opt: Some(
+                            "One",
+                        ),
+                        tuple_decl_opt: Some(
+                            TupleDecl {
+                                fields: [],
+                                node: NodeData(..),
+                            },
+                        ),
+                        node: NodeData(..),
+                    },
+                    CtorDecl {
+                        name_opt: Some(
+                            "Two",
+                        ),
+                        tuple_decl_opt: Some(
+                            TupleDecl {
+                                fields: [
+                                    Ty {
+                                        name_opt: Some(
+                                            "Boolean",
+                                        ),
+                                        node: NodeData(..),
+                                    },
+                                ],
+                                node: NodeData(..),
+                            },
+                        ),
+                        node: NodeData(..),
+                    },
+                ],
+                node: NodeData(..),
+            },
+        ),
+        Match(
+            MatchStmt {
+                cond_opt: Some(
+                    Ctor(
+                        CtorExpr {
+                            name_opt: Some(
+                                "Two",
+                            ),
+                            tuple_opt: Some(
+                                [
+                                    Ctor(
+                                        CtorExpr {
+                                            name_opt: Some(
+                                                "False",
+                                            ),
+                                            tuple_opt: None,
+                                            node: NodeData(..),
+                                        },
+                                    ),
+                                ],
+                            ),
+                            node: NodeData(..),
+                        },
+                    ),
+                ),
+                arms: [
+                    MatchArm {
+                        pat_opt: Some(
+                            Ctor(
+                                CtorPat {
+                                    name_opt: Some(
+                                        "One",
+                                    ),
+                                    tuple_opt: Some(
+                                        [],
+                                    ),
+                                    node: NodeData(..),
+                                },
+                            ),
+                        ),
+                        node: NodeData(..),
+                    },
+                    MatchArm {
+                        pat_opt: Some(
+                            Ctor(
+                                CtorPat {
+                                    name_opt: Some(
+                                        "Two",
+                                    ),
+                                    tuple_opt: Some(
+                                        [
+                                            Discard(
+                                                DiscardPat {
+                                                    node: NodeData(..),
+                                                },
+                                            ),
+                                        ],
+                                    ),
+                                    node: NodeData(..),
+                                },
+                            ),
+                        ),
+                        node: NodeData(..),
+                    },
+                ],
+                node: NodeData(..),
+            },
+        ),
+        Enum(
+            EnumDecl {
+                name_opt: Some(
+                    "Foo",
+                ),
+                ctors: [
+                    CtorDecl {
+                        name_opt: Some(
+                            "Bar",
+                        ),
+                        tuple_decl_opt: Some(
+                            TupleDecl {
+                                fields: [
+                                    Ty {
+                                        name_opt: Some(
+                                            "HOGEHOGE",
+                                        ),
+                                        node: NodeData(..),
+                                    },
+                                ],
+                                node: NodeData(..),
+                            },
                         ),
                         node: NodeData(..),
                     },

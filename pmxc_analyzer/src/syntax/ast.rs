@@ -4,6 +4,12 @@ use super::*;
 use std::rc::Rc;
 
 #[derive(Debug)]
+pub(crate) struct Ty {
+    pub(crate) name_opt: Option<String>,
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
 pub(crate) struct DiscardPat {
     pub(crate) node: Rc<NodeData>,
 }
@@ -11,6 +17,7 @@ pub(crate) struct DiscardPat {
 #[derive(Debug)]
 pub(crate) struct CtorPat {
     pub(crate) name_opt: Option<String>,
+    pub(crate) tuple_opt: Option<Vec<Pat>>,
     pub(crate) node: Rc<NodeData>,
 }
 
@@ -23,6 +30,7 @@ pub(crate) enum Pat {
 #[derive(Debug)]
 pub(crate) struct CtorExpr {
     pub(crate) name_opt: Option<String>,
+    pub(crate) tuple_opt: Option<Vec<Expr>>,
     pub(crate) node: Rc<NodeData>,
 }
 
@@ -45,8 +53,15 @@ pub(crate) struct MatchStmt {
 }
 
 #[derive(Debug)]
+pub(crate) struct TupleDecl {
+    pub(crate) fields: Vec<Ty>,
+    pub(crate) node: Rc<NodeData>,
+}
+
+#[derive(Debug)]
 pub(crate) struct CtorDecl {
     pub(crate) name_opt: Option<String>,
+    pub(crate) tuple_decl_opt: Option<TupleDecl>,
     pub(crate) node: Rc<NodeData>,
 }
 

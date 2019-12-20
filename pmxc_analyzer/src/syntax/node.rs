@@ -7,14 +7,17 @@ pub(crate) enum Node {
     Name,
     NumberLiteral,
     Group,
+    Call,
+    Argument,
     ExprStmt,
-    LetStmt,
     MatchStmt,
     MatchArm,
     EnumDecl,
-    StructDecl,
-    /// K or K(...) or K {...}
+    /// K or K(...)
     CtorDecl,
+    /// <コンストラクタ> "(" <タプルフィールド>,* ")"
+    TupleDecl,
+    TupleFieldDecl,
     Root,
     NotSpecified,
 }
@@ -72,6 +75,7 @@ impl NodeData {
 
 impl Debug for NodeData {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // AST のダンプ時に邪魔にならないようにする。
         write!(f, "NodeData(..)")
     }
 }
