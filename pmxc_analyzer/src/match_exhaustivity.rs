@@ -126,7 +126,6 @@ pub(crate) mod lower {
                 Some(Pattern::Constructor {
                     name: name.to_string(),
                     args,
-                    ty: ty.clone(),
                 })
             }
             _ => None,

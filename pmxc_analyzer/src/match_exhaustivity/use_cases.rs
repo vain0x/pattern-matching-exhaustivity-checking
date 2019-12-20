@@ -67,14 +67,12 @@ mod tests {
                     pattern: Pattern::Constructor {
                         name: "True".to_string(),
                         args: vec![],
-                        ty: boolean_ty.clone(),
                     },
                 },
                 MatchArm {
                     pattern: Pattern::Constructor {
                         name: "False".to_string(),
                         args: vec![],
-                        ty: boolean_ty.clone(),
                     },
                 },
             ],
@@ -98,7 +96,6 @@ mod tests {
                     pattern: Pattern::Constructor {
                         name: "True".to_string(),
                         args: vec![],
-                        ty: boolean_ty.clone(),
                     },
                 },
                 MatchArm {
@@ -126,7 +123,6 @@ mod tests {
                 pattern: Pattern::Constructor {
                     name: "True".to_string(),
                     args: vec![],
-                    ty: boolean_ty.clone(),
                 },
             }],
         };

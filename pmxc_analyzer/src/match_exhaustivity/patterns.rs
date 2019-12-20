@@ -12,9 +12,5 @@ pub(crate) enum Pattern {
     ///
     /// enum の特定のコンストラクタにだけマッチするようなパターン。
     /// 例: `Boolean::True` や `Pair::Pair(_, _)` など。
-    Constructor {
-        name: String,
-        args: Vec<Pattern>,
-        ty: Ty,
-    },
+    Constructor { name: String, args: Vec<Pattern> },
 }
