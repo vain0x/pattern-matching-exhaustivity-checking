@@ -14,6 +14,11 @@ enum Digit {
     Two(Boolean),
 }
 
+enum Binary {
+    Zero,
+    NonZero(Boolean, Binary),
+}
+
 // OK: 網羅的
 match Unit {
     Unit => {}
@@ -32,8 +37,8 @@ match True {
 
 // OK: 網羅的
 match True {
-    True => {}
     False => {}
+    True => {}
 }
 
 // OK: 網羅的
@@ -45,8 +50,25 @@ match One {
 // OK: 網羅的
 match One {
     One => {}
-    Two(True) => {}
     Two(False) => {}
+    Two(True) => {}
+}
+
+// OK: 網羅的
+match Zero {
+    Zero => {}
+    NonZero(False, _) => {}
+    NonZero(True, _) => {}
+}
+
+// OK: 網羅的
+match Zero {
+    Zero => {}
+    NonZero(False, Zero) => {}
+    NonZero(False, NonZero(_, _)) => {}
+    NonZero(True, Zero) => {}
+    NonZero(True, NonZero(False, _)) => {}
+    NonZero(True, NonZero(True, _)) => {}
 }
 
 // OK: 網羅的 (冗長)
@@ -71,6 +93,24 @@ match One {
     One => {}
     Two(True) => {}
     // Two(False) => {}
+}
+
+// NG: 非網羅的
+match Zero {
+    NonZero(_, _) => {}
+}
+
+// NG: 非網羅的
+match Zero {
+    Zero => {}
+    NonZero(_, NonZero(_, _)) => {}
+}
+
+// NG: 非網羅的
+match Zero {
+    Zero => {}
+    NonZero(False, Zero) => {}
+    NonZero(True, NonZero(_, _)) => {}
 }
 
 // その他
