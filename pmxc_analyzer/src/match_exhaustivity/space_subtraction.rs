@@ -21,15 +21,11 @@ pub(crate) fn space_subtraction(mut first: Space, mut second: Space, td: &TyData
 
         // コンストラクタ型スペースからコンストラクタスペースを引く。
         // 左辺をコンストラクタスペースにばらすだけ。
-        // FIXME: 実装
         (Space::Ty(ref mut ty), Space::Constructor { ref name, .. })
             if ty.is_constructor_of_name(name) =>
         {
-            let name = match std::mem::replace(ty, Ty::default()) {
-                Ty::Constructor { name } => name,
-                _ => unreachable!(),
-            };
-            let first = Space::Constructor { name, args: vec![] };
+            let ty = std::mem::replace(ty, Ty::default());
+            let first = space_decompose(Space::Ty(ty), td);
             space_subtraction(first, second, td)
         }
 
