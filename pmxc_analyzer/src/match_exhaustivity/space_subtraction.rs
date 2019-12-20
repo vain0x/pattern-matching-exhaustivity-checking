@@ -90,8 +90,13 @@ pub(crate) fn space_subtraction(mut first: Space, mut second: Space, td: &TyData
             }
 
             // いずれかの引数のスペースが直交していたら何もしない。
-            // (これも最後のケースの特別な場合を効率よく処理するもの、だと思う。)
+            // (いずれかの引数のスペースが空だったら、コンストラクタパターンも空。)
+            // (それ以外のケースに関しては、これも最後のケースの特別な場合を効率よく処理するもの、だと思う。)
             // FIXME: 実装
+            let any_is_empty = first_args.iter().any(|arg| arg.is_empty());
+            if any_is_empty {
+                return Space::new_empty();
+            }
 
             // いずれかの引数スペースの差を取って、残りはそのまま、というスペースの和を作る。
             // 例えば型 (bool, bool) のパターンマッチで (true, false) というケースがあるとき、
