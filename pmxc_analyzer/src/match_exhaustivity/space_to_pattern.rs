@@ -4,33 +4,31 @@
 
 use super::*;
 
-fn constructor_to_pattern(
-    name: String,
-    constructor_definition: &ConstructorDefinition,
-    td: &TyDatabase,
-) -> Option<Pattern> {
+fn constructor_to_pattern(name: String, constructor_definition: &ConstructorDefinition) -> Pattern {
     let args = constructor_definition
         .arg_tys
         .iter()
-        .map(|arg_ty| ty_to_pattern(arg_ty, td))
-        .collect::<Option<Vec<_>>>()?;
-    Some(Pattern::Constructor { name, args })
+        .map(|arg_ty| Pattern::Discard { ty: arg_ty.clone() })
+        .collect::<Vec<_>>();
+    Pattern::Constructor { name, args }
 }
 
 fn ty_to_pattern(ty: &Ty, td: &TyDatabase) -> Option<Pattern> {
     match ty {
         Ty::Constructor { name } => {
             let (_, constructor_definition) = td.find_constructor_by_name(name)?;
-            constructor_to_pattern(name.to_string(), constructor_definition, td)
+            Some(constructor_to_pattern(
+                name.to_string(),
+                constructor_definition,
+            ))
         }
         Ty::Enum { name } => {
             let constructor_definitions = td.find_enum_definition(&name)?;
             let constructor_definition = constructor_definitions.iter().next()?;
-            constructor_to_pattern(
+            Some(constructor_to_pattern(
                 constructor_definition.name.to_string(),
                 constructor_definition,
-                td,
-            )
+            ))
         }
     }
 }
