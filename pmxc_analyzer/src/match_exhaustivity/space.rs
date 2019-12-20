@@ -1,13 +1,8 @@
 use super::*;
 
-/// スペース
 #[derive(Clone, Debug)]
 pub(crate) enum Space {
-    /// コンストラクタ
-    Constructor {
-        name: String,
-        args: Vec<Space>,
-    },
+    Constructor { name: String, args: Vec<Space> },
 
     Union(Vec<Space>),
 
