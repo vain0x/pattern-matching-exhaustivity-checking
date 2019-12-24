@@ -12,6 +12,7 @@ pub(crate) mod parse_stmts;
 pub(crate) mod pun;
 pub(crate) mod source;
 pub(crate) mod text_cursor;
+pub(crate) mod text_position;
 pub(crate) mod token;
 pub(crate) mod token_range_map;
 pub(crate) mod tokenize;
@@ -24,36 +25,10 @@ pub(crate) use element::Element;
 pub(crate) use node::{Node, NodeData};
 pub(crate) use parse_error::ParseError;
 pub(crate) use text_cursor::TextCursor;
+pub(crate) use text_position::TextPosition;
 pub(crate) use token::{Token, TokenData};
 pub(crate) use token_range_map::TokenRangeMap;
 pub(crate) use trivia::Trivia;
-
-/// 行番号と列番号で表されるテキスト上の位置。(1 から始まる。)
-#[derive(Clone, Copy, Debug, Default)]
-pub(crate) struct TextPosition {
-    /// 1-based index.
-    line: usize,
-
-    /// 1-based index.
-    character: usize,
-}
-
-impl TextPosition {
-    pub(crate) fn new(line: usize, character: usize) -> Self {
-        assert!(line >= 1);
-        assert!(character >= 1);
-
-        TextPosition { line, character }
-    }
-
-    pub(crate) fn line(&self) -> usize {
-        self.line
-    }
-
-    pub(crate) fn character(&self) -> usize {
-        self.character
-    }
-}
 
 #[derive(Clone, Copy, Debug, Default)]
 pub(crate) struct TextRange {
