@@ -1,4 +1,5 @@
 pub(crate) mod expressions;
+pub(crate) mod helpers;
 pub(crate) mod patterns;
 pub(crate) mod space;
 pub(crate) mod space_from_pattern;
@@ -13,31 +14,6 @@ pub(crate) use expressions::{MatchArm, MatchExpression};
 pub(crate) use patterns::Pattern;
 pub(crate) use space::Space;
 pub(crate) use ty_system::{ConstructorDefinition, Ty, TyDatabase, TyDefinition};
-
-pub(crate) mod display {
-    use super::*;
-    use std::fmt::{self, Display, Formatter};
-
-    impl Display for Pattern {
-        fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-            match self {
-                Pattern::Discard { .. } => write!(f, "_"),
-                Pattern::Constructor { name, args } if args.is_empty() => write!(f, "{}", name),
-                Pattern::Constructor { name, args } => {
-                    write!(f, "{}(", name)?;
-                    for (i, arg) in args.iter().enumerate() {
-                        if i != 0 {
-                            write!(f, ", ")?;
-                        }
-
-                        write!(f, "{}", arg)?;
-                    }
-                    write!(f, ")")
-                }
-            }
-        }
-    }
-}
 
 /// 抽象構文木から網羅性検査用の中間表現を生成する。
 /// (網羅性検査アルゴリズムとは無関係。)
