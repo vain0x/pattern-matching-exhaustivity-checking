@@ -13,6 +13,7 @@ pub(crate) mod pun;
 pub(crate) mod source;
 pub(crate) mod text_cursor;
 pub(crate) mod token;
+pub(crate) mod token_range_map;
 pub(crate) mod tokenize;
 pub(crate) mod tokenize_context;
 pub(crate) mod tokenize_rules;
@@ -20,10 +21,11 @@ pub(crate) mod trivia;
 
 pub(crate) use ast::*;
 pub(crate) use element::Element;
-pub(crate) use node::{token_range_map::TokenRangeMap, Node, NodeData};
+pub(crate) use node::{Node, NodeData};
 pub(crate) use parse_error::ParseError;
 pub(crate) use text_cursor::TextCursor;
 pub(crate) use token::{Token, TokenData};
+pub(crate) use token_range_map::TokenRangeMap;
 pub(crate) use trivia::Trivia;
 
 /// 行番号と列番号で表されるテキスト上の位置。(1 から始まる。)
