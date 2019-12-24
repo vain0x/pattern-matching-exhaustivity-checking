@@ -121,8 +121,8 @@ pub fn validate(source_code: String) -> JsValue {
     let root = Rc::new(root);
     let token_range_map = syntax::TokenRangeMap::new(&root);
     let ast = syntax::ast_gen::gen_root(root);
-    let mut model = match_exhaustivity::lower::from_ast(&ast, token_range_map);
-    match_exhaustivity::lower::check(&mut model);
+    let mut model = match_exhaustivity::helpers::lower::from_ast(&ast, token_range_map);
+    match_exhaustivity::helpers::lower::check(&mut model);
 
     let markers = model
         .errors
