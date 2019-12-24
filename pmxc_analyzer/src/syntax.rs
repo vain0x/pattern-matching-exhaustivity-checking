@@ -13,6 +13,7 @@ pub(crate) mod pun;
 pub(crate) mod source;
 pub(crate) mod text_cursor;
 pub(crate) mod text_position;
+pub(crate) mod text_range;
 pub(crate) mod token;
 pub(crate) mod token_range_map;
 pub(crate) mod tokenize;
@@ -26,29 +27,10 @@ pub(crate) use node::{Node, NodeData};
 pub(crate) use parse_error::ParseError;
 pub(crate) use text_cursor::TextCursor;
 pub(crate) use text_position::TextPosition;
+pub(crate) use text_range::TextRange;
 pub(crate) use token::{Token, TokenData};
 pub(crate) use token_range_map::TokenRangeMap;
 pub(crate) use trivia::Trivia;
-
-#[derive(Clone, Copy, Debug, Default)]
-pub(crate) struct TextRange {
-    start: TextPosition,
-    end: TextPosition,
-}
-
-impl TextRange {
-    pub(crate) fn new(start: TextPosition, end: TextPosition) -> Self {
-        TextRange { start, end }
-    }
-
-    pub(crate) fn start(&self) -> TextPosition {
-        self.start
-    }
-
-    pub(crate) fn end(&self) -> TextPosition {
-        self.end
-    }
-}
 
 #[cfg(test)]
 mod tests {
