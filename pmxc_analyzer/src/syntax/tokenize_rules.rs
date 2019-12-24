@@ -1,3 +1,5 @@
+//! 字句解析の規則
+
 use super::pun::PUN_TABLE;
 use super::tokenize_context::TokenizeContext;
 use super::*;
@@ -32,6 +34,7 @@ fn char_is_other_first(c: char) -> bool {
         && !char_is_pun_first(c)
 }
 
+/// 改行を読み進める。
 fn tokenize_eol(t: &mut TokenizeContext) {
     while t.eat("\r\n") {
         t.commit(Token::Eol);
@@ -42,6 +45,7 @@ fn tokenize_eol(t: &mut TokenizeContext) {
     }
 }
 
+/// 空白を読み進める。
 fn tokenize_space(t: &mut TokenizeContext) {
     if char_is_space(t.next()) {
         while char_is_space(t.next()) {
@@ -52,6 +56,7 @@ fn tokenize_space(t: &mut TokenizeContext) {
     }
 }
 
+/// コメントを読み進める。
 fn tokenize_comment(t: &mut TokenizeContext) {
     if t.eat("//") {
         while !t.at_eof() && t.next() != '\r' && t.next() != '\n' {
@@ -62,6 +67,7 @@ fn tokenize_comment(t: &mut TokenizeContext) {
     }
 }
 
+/// 数値を読み進める。
 fn tokenize_number(t: &mut TokenizeContext) {
     if t.next().is_ascii_digit() {
         while t.next().is_ascii_digit() {
@@ -72,6 +78,7 @@ fn tokenize_number(t: &mut TokenizeContext) {
     }
 }
 
+/// 識別子を読み進める。
 fn tokenize_ident(t: &mut TokenizeContext) {
     if char_is_ident_first(t.next()) {
         while char_is_ident(t.next()) {
@@ -84,6 +91,7 @@ fn tokenize_ident(t: &mut TokenizeContext) {
     }
 }
 
+/// 約物を読み進める。
 fn tokenize_pun(t: &mut TokenizeContext) {
     for &(token, pun_text) in PUN_TABLE {
         if t.eat(pun_text) {
@@ -92,6 +100,7 @@ fn tokenize_pun(t: &mut TokenizeContext) {
     }
 }
 
+/// 解釈できない文字を読み進める。
 fn tokenize_other(t: &mut TokenizeContext) {
     if !t.at_eof() && char_is_other_first(t.next()) {
         while !t.at_eof() && char_is_other_first(t.next()) {
@@ -102,6 +111,7 @@ fn tokenize_other(t: &mut TokenizeContext) {
     }
 }
 
+/// 字句解析の規則をすべて適用する。
 pub(crate) fn tokenize_all(t: &mut TokenizeContext) {
     while !t.at_eof() {
         let start_index = t.current_index();

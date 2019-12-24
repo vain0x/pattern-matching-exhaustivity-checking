@@ -1,7 +1,7 @@
 //! 型からスペースを作る機能
 //!
 //! これは型システムに強く依存する。
-//! ここでは通常の関数として定義しているが、トレイトやインターフェイスやモジュールを使って、API として渡す方がいい。
+//! ここでは通常の関数として定義しているが、トレイトやインターフェイスで間接的に渡す方がいい。
 
 use super::*;
 
@@ -9,6 +9,11 @@ pub(crate) fn space_from_ty(ty: Ty) -> Space {
     Space::Ty(ty)
 }
 
+/// スペースが分解可能か？
+///
+/// enum 型スペースやコンストラクタ型の型スペースは分解可能。
+/// 型スペースではないスペースは分解不能。
+/// (関数型や i64 型など、コンストラクタのユニオンでは表せないような型があれば、型スペースでも分解不能になる。)
 pub(crate) fn space_can_decompose(space: &Space, td: &TyDatabase) -> bool {
     match space {
         Space::Ty(Ty::Enum { ref name }) => td.find_enum_definition(name).is_some(),
@@ -17,6 +22,9 @@ pub(crate) fn space_can_decompose(space: &Space, td: &TyDatabase) -> bool {
     }
 }
 
+/// 型スペースを分解する。
+///
+/// コンストラクタスペース (のユニオン) にする。
 pub(crate) fn space_decompose(space: Space, td: &TyDatabase) -> Space {
     assert!(space_can_decompose(&space, td));
 
@@ -51,6 +59,10 @@ pub(crate) fn space_decompose(space: Space, td: &TyDatabase) -> Space {
         _ => unreachable!(),
     }
 }
+
+// -----------------------------------------------
+// テスト
+// -----------------------------------------------
 
 #[cfg(test)]
 mod tests {

@@ -1,3 +1,5 @@
+//! 字句解析の状態管理
+
 use super::*;
 use std::rc::Rc;
 

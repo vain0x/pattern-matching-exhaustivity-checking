@@ -1,3 +1,5 @@
+//! 抽象構文木から網羅性検査用のデータ構造への変換。
+
 use crate::match_exhaustivity::*;
 use crate::syntax::{
     self, CtorExpr, CtorPat, EnumDecl, Expr, MatchStmt, Node, Pat, Root, Stmt, TextRange, Token,

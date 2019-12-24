@@ -6,11 +6,15 @@ impl Token {
         self == Token::Number || self == Token::Ident || self == Token::LeftParen
     }
 
+    /// 次のトークンが式の FIRST 集合に入っているか？
+    ///
+    /// 次のトークンから始まるような式の構文があるなら true。
     pub(crate) fn is_expr_first(self) -> bool {
         self.is_atom_first()
     }
 }
 
+/// 原子式をパースする。
 pub(crate) fn parse_atom(p: &mut ParseContext) -> Option<NodeData> {
     match p.next() {
         Token::Number => {
@@ -48,6 +52,7 @@ pub(crate) fn parse_atom(p: &mut ParseContext) -> Option<NodeData> {
     }
 }
 
+/// 関数呼び出しをパースする。
 pub(crate) fn parse_call(p: &mut ParseContext) -> Option<NodeData> {
     let mut callee = parse_atom(p)?;
 

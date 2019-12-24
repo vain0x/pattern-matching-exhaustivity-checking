@@ -1,11 +1,12 @@
 use super::*;
 
+/// テキスト位置を計算するもの。
 #[derive(Clone, Default)]
 pub(crate) struct TextCursor {
     /// 0-based index.
     line: usize,
 
-    /// 0-based index.
+    /// 0-based index. (UTF-16 基準)
     character: usize,
 }
 

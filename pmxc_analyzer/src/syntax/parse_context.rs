@@ -25,6 +25,7 @@ impl ParseContext {
         self.next() == Token::Eof
     }
 
+    /// 次の字句との間に改行があるか？
     pub(crate) fn at_eol(&self) -> bool {
         if self.index >= self.tokens.len() {
             return true;
@@ -41,6 +42,7 @@ impl ParseContext {
         self.nth(0).map_or(Token::Eof, |token| token.token())
     }
 
+    /// 次の字句を読み進める。
     pub(crate) fn bump(&mut self, node: &mut NodeData) {
         assert!(self.index + 1 <= self.tokens.len());
 
@@ -52,6 +54,7 @@ impl ParseContext {
         self.assert_invariants();
     }
 
+    /// 次の字句が指定された種類なら読み進める。
     pub(crate) fn eat(&mut self, node: &mut NodeData, token: Token) -> bool {
         if self.next() == token {
             self.bump(node);
@@ -61,6 +64,7 @@ impl ParseContext {
         }
     }
 
+    /// 指定された種類の字句が並んでいて、間に空白等がなければ読み進める。
     pub(crate) fn eat_puns<'a>(
         &'a mut self,
         node: &'a mut NodeData,

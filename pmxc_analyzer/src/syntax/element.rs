@@ -1,6 +1,7 @@
 use super::*;
 use std::rc::Rc;
 
+/// 構文要素
 #[derive(Debug)]
 pub(crate) enum Element {
     Token(TokenData),

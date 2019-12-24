@@ -7,12 +7,9 @@
 pub(crate) enum Ty {
     /// enum の1つのコンストラクタが表す型。
     /// 例えば true 型など。
-    Constructor {
-        name: String,
-    },
-    Enum {
-        name: String,
-    },
+    Constructor { name: String },
+    /// enum で定義された型を名前で指す型。
+    Enum { name: String },
 }
 
 impl Ty {
@@ -25,6 +22,7 @@ impl Ty {
     }
 }
 
+// 変わり身パターン用
 impl Default for Ty {
     fn default() -> Ty {
         Ty::Constructor {
@@ -47,7 +45,7 @@ pub(crate) struct ConstructorDefinition {
     pub(crate) arg_tys: Vec<Ty>,
 }
 
-/// 型に関する知識を提供する。
+/// 型に関する知識を提供するもの。
 #[derive(Default)]
 pub(crate) struct TyDatabase {
     pub(crate) definitions: Vec<TyDefinition>,
@@ -67,6 +65,7 @@ impl TyDatabase {
             .next()
     }
 
+    // FIXME: find_constructor_by_name とほぼ同じ？
     pub(crate) fn find_constructor_definition(
         &self,
         constructor_name: &str,

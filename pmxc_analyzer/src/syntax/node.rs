@@ -73,9 +73,9 @@ impl NodeData {
     }
 }
 
+// AST のダンプ時に邪魔にならないようにする。
 impl Debug for NodeData {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // AST のダンプ時に邪魔にならないようにする。
         write!(f, "NodeData(..)")
     }
 }

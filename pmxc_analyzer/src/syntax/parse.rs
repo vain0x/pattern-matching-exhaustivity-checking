@@ -15,6 +15,7 @@ pub(crate) fn parse(source_code: Rc<String>) -> NodeData {
     parse_tokens(tokens)
 }
 
+/// 構文木内のエラーを収集する。
 pub(crate) fn collect_errors(
     node: &NodeData,
     cursor: &mut TextCursor,
@@ -33,8 +34,6 @@ pub(crate) fn collect_errors(
         let range = TextRange::new(start, end);
 
         for trivia in token.trailing() {
-            // let start = cursor.current();
-            // let range = TextRange::new(start, start);
             on_trivia(trivia, range, cursor, errors);
         }
     }

@@ -1,3 +1,6 @@
+//! パターンから文字列への変換。
+//! 網羅されていない値の例示に使う。
+
 use crate::match_exhaustivity::*;
 use std::fmt::{self, Display, Formatter};
 

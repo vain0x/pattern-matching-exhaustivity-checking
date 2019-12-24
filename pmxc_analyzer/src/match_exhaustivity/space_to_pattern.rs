@@ -4,6 +4,7 @@
 
 use super::*;
 
+/// コンストラクタ定義からパターンを構成する。
 fn constructor_to_pattern(name: String, constructor_definition: &ConstructorDefinition) -> Pattern {
     let args = constructor_definition
         .arg_tys
@@ -13,6 +14,7 @@ fn constructor_to_pattern(name: String, constructor_definition: &ConstructorDefi
     Pattern::Constructor { name, args }
 }
 
+/// 型の値の例として、パターンを1つ構成する。
 fn ty_to_pattern(ty: &Ty, td: &TyDatabase) -> Option<Pattern> {
     match ty {
         Ty::Constructor { name } => {
@@ -33,9 +35,11 @@ fn ty_to_pattern(ty: &Ty, td: &TyDatabase) -> Option<Pattern> {
     }
 }
 
+/// スペースから、そのスペースに含まれるパターンを1つ例示する。
 pub(crate) fn space_to_pattern(space: Space, td: &TyDatabase) -> Option<Pattern> {
     match space {
         Space::Constructor { name, args } => {
+            // すべての引数からパターンの例示が取れたら、それらを引数とするコンストラクタパターンを作る。
             let args = args
                 .into_iter()
                 .map(|arg_space| space_to_pattern(arg_space, td))
@@ -46,7 +50,6 @@ pub(crate) fn space_to_pattern(space: Space, td: &TyDatabase) -> Option<Pattern>
             .into_iter()
             .filter_map(|space| space_to_pattern(space, td))
             .next(),
-
         Space::Ty(ty) => ty_to_pattern(&ty, td),
     }
 }

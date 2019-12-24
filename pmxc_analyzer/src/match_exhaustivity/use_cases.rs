@@ -4,6 +4,7 @@ use super::space_subtraction::space_subtraction;
 use super::space_to_pattern::space_to_pattern;
 use super::*;
 
+/// 1つの match 式の網羅性検査を行う。
 pub(crate) fn check_exhaustivity(
     expression: &MatchExpression,
     td: &TyDatabase,
@@ -31,6 +32,7 @@ pub(crate) fn check_exhaustivity(
     (ok, leaked_pattern)
 }
 
+/// match 式が網羅的か？
 pub(crate) fn is_exhaustive(expression: &MatchExpression, td: &TyDatabase) -> bool {
     let (ok, _) = check_exhaustivity(expression, td);
     ok
