@@ -58,8 +58,8 @@ impl NodeData {
         &self.children
     }
 
-    pub(crate) fn push_token(&mut self, mut token: TokenData) {
-        let (leading, trailing) = token.take_trivia();
+    pub(crate) fn push_token(&mut self, token: FatToken) {
+        let (leading, token, trailing) = token.into_slim();
 
         for trivia in leading {
             self.children.push(trivia.into());

@@ -19,10 +19,6 @@ impl TokenRangeMap {
     }
 
     fn on_token(&mut self, token: &TokenData) {
-        for trivia in token.leading() {
-            self.on_trivia(trivia);
-        }
-
         let key = Self::get_key(token);
         let start = self.cursor.current();
 
@@ -30,10 +26,6 @@ impl TokenRangeMap {
 
         let end = self.cursor.current();
         self.map.insert(key, TextRange::new(start, end));
-
-        for trivia in token.trailing() {
-            self.on_trivia(trivia);
-        }
     }
 
     fn on_trivia(&mut self, trivia: &Trivia) {

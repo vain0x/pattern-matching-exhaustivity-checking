@@ -12,9 +12,9 @@ pub(crate) struct TokenizeContext {
     last_index: usize,
 
     /// 次のトークンの前方にあるトリビア
-    leading: Vec<TokenData>,
+    leading: Vec<Trivia>,
 
-    tokens: Vec<TokenData>,
+    tokens: Vec<FatToken>,
 }
 
 impl TokenizeContext {
@@ -87,15 +87,17 @@ impl TokenizeContext {
             self.tokens
                 .last_mut()
                 .unwrap()
-                .push_trailing_token(token_data);
+                .push_trailing(Trivia::from(token_data));
         } else if token.is_leading_trivia() {
-            self.leading.push(token_data);
+            self.leading.push(Trivia::from(token_data));
         } else {
+            let mut fat_token = FatToken::from(token_data);
+
             for t in self.leading.drain(..) {
-                token_data.push_leading_token(t);
+                fat_token.push_leading(t);
             }
 
-            self.tokens.push(token_data);
+            self.tokens.push(fat_token);
         }
     }
 
@@ -109,7 +111,7 @@ impl TokenizeContext {
         self.assert_invariants();
     }
 
-    pub(crate) fn finish(mut self) -> Box<[TokenData]> {
+    pub(crate) fn finish(mut self) -> Box<[FatToken]> {
         assert_eq!(self.current_index, self.last_index);
         assert_eq!(self.current_index, self.source_code.len());
 

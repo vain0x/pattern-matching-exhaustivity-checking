@@ -24,8 +24,6 @@ impl From<TokenData> for Trivia {
             "{:?} can't be a trivia",
             token.token()
         );
-        assert!(token.leading().is_empty());
-        assert!(token.trailing().is_empty());
 
         Trivia(token)
     }

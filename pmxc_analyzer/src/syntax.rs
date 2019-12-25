@@ -28,7 +28,7 @@ pub(crate) use parse_error::ParseError;
 pub(crate) use text_cursor::TextCursor;
 pub(crate) use text_position::TextPosition;
 pub(crate) use text_range::TextRange;
-pub(crate) use token::{Token, TokenData};
+pub(crate) use token::{FatToken, Token, TokenData};
 pub(crate) use token_range_map::TokenRangeMap;
 pub(crate) use trivia::Trivia;
 
@@ -64,7 +64,7 @@ mod tests {
                 write_token(trivia.as_token(), " v", &mut snapshot).unwrap();
             }
 
-            write_token(token, "", &mut snapshot).unwrap();
+            write_token(token.as_slim(), "", &mut snapshot).unwrap();
 
             for trivia in token.trailing() {
                 write_token(trivia.as_token(), " ^", &mut snapshot).unwrap();
@@ -76,14 +76,6 @@ mod tests {
 
     pub(crate) fn snapshot_node(node: &NodeData, w: &mut Vec<u8>) -> io::Result<()> {
         fn on_token(token: &TokenData, depth: usize, w: &mut Vec<u8>) -> io::Result<()> {
-            if !token.leading().is_empty() {
-                write!(w, "{}v [\n", indent(depth))?;
-                for trivia in token.leading() {
-                    on_token(trivia.as_token(), depth + 1, w)?;
-                }
-                write!(w, "{}]\n", indent(depth))?;
-            }
-
             write!(
                 w,
                 "{}T({:?}) {:?}\n",
@@ -91,14 +83,6 @@ mod tests {
                 token.token(),
                 token.text()
             )?;
-
-            if !token.trailing().is_empty() {
-                write!(w, "{}^ [\n", indent(depth))?;
-                for trivia in token.trailing() {
-                    on_token(trivia.as_token(), depth + 1, w)?;
-                }
-                write!(w, "{}]\n", indent(depth))?;
-            }
 
             Ok(())
         }

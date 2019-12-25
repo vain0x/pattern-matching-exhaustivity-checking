@@ -12,9 +12,6 @@ pub(crate) enum Element {
 
 impl From<TokenData> for Element {
     fn from(token: TokenData) -> Element {
-        debug_assert!(token.leading().is_empty());
-        debug_assert!(token.trailing().is_empty());
-
         Element::Token(token)
     }
 }

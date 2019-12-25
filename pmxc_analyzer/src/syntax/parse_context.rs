@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 type TokenIndex = usize;
 
-type TokenList = Rc<[TokenData]>;
+type TokenList = Rc<[FatToken]>;
 
 pub(crate) struct ParseContext {
     tokens: TokenList,
@@ -34,7 +34,7 @@ impl ParseContext {
         self.tokens[self.index].contains_eol()
     }
 
-    fn nth(&self, offset: usize) -> Option<&TokenData> {
+    fn nth(&self, offset: usize) -> Option<&FatToken> {
         self.tokens.get(self.index + offset)
     }
 

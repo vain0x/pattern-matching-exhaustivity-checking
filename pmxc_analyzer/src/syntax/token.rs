@@ -70,18 +70,11 @@ impl Token {
 pub(crate) struct TokenData {
     token: Token,
     text: String,
-    leading: Vec<Trivia>,
-    trailing: Vec<Trivia>,
 }
 
 impl TokenData {
     pub(crate) fn new(token: Token, text: String) -> Self {
-        TokenData {
-            token,
-            text,
-            leading: vec![],
-            trailing: vec![],
-        }
+        TokenData { token, text }
     }
 
     pub(crate) fn token(&self) -> Token {
@@ -90,6 +83,32 @@ impl TokenData {
 
     pub(crate) fn text(&self) -> &str {
         &self.text
+    }
+}
+
+/// 字句のデータ + 前後のトリビア
+#[derive(Clone, Debug)]
+pub(crate) struct FatToken {
+    token: TokenData,
+    leading: Vec<Trivia>,
+    trailing: Vec<Trivia>,
+}
+
+impl FatToken {
+    pub(crate) fn as_slim(&self) -> &TokenData {
+        &self.token
+    }
+
+    pub(crate) fn into_slim(self) -> (Vec<Trivia>, TokenData, Vec<Trivia>) {
+        (self.leading, self.token, self.trailing)
+    }
+
+    pub(crate) fn token(&self) -> Token {
+        self.as_slim().token()
+    }
+
+    pub(crate) fn text(&self) -> &str {
+        self.as_slim().text()
     }
 
     pub(crate) fn leading(&self) -> &[Trivia] {
@@ -100,33 +119,27 @@ impl TokenData {
         &self.trailing
     }
 
-    pub(crate) fn take_trivia(&mut self) -> (Vec<Trivia>, Vec<Trivia>) {
-        let leading = std::mem::replace(&mut self.leading, vec![]);
-        let trailing = std::mem::replace(&mut self.trailing, vec![]);
-        (leading, trailing)
+    pub(crate) fn push_leading(&mut self, trivia: Trivia) {
+        self.leading.push(trivia);
     }
 
-    pub(crate) fn push_leading_token(&mut self, token: TokenData) {
-        self.leading.push(token.into());
-    }
-
-    pub(crate) fn push_trailing_token(&mut self, token: TokenData) {
-        self.trailing.push(token.into());
+    pub(crate) fn push_trailing(&mut self, trivia: Trivia) {
+        self.trailing.push(trivia);
     }
 
     fn traverse_tokens<F: FnMut(&TokenData) -> bool>(&self, f: &mut F) -> bool {
         for trivia in self.leading() {
-            if !trivia.as_token().traverse_tokens(f) {
+            if !f(trivia.as_token()) {
                 return false;
             }
         }
 
-        if !f(self) {
+        if !f(self.as_slim()) {
             return false;
         }
 
         for trivia in self.trailing() {
-            if !trivia.as_token().traverse_tokens(f) {
+            if !f(trivia.as_token()) {
                 return false;
             }
         }
@@ -146,5 +159,15 @@ impl TokenData {
         });
 
         ok
+    }
+}
+
+impl From<TokenData> for FatToken {
+    fn from(token: TokenData) -> Self {
+        FatToken {
+            token,
+            leading: vec![],
+            trailing: vec![],
+        }
     }
 }

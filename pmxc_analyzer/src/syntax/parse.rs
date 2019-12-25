@@ -3,7 +3,7 @@ use super::parse_stmts::parse_root;
 use super::*;
 use std::rc::Rc;
 
-pub(crate) fn parse_tokens(tokens: Rc<[TokenData]>) -> NodeData {
+pub(crate) fn parse_tokens(tokens: Rc<[FatToken]>) -> NodeData {
     let mut p = ParseContext::new(tokens);
     let mut root = parse_root(&mut p);
     p.finish(&mut root);
