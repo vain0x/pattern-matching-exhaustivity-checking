@@ -5,12 +5,16 @@ use std::rc::Rc;
 #[derive(Debug)]
 pub(crate) enum Element {
     Token(TokenData),
+    Trivia(Trivia),
     Error(ParseError),
     Node(Rc<NodeData>),
 }
 
 impl From<TokenData> for Element {
     fn from(token: TokenData) -> Element {
+        debug_assert!(token.leading().is_empty());
+        debug_assert!(token.trailing().is_empty());
+
         Element::Token(token)
     }
 }
@@ -23,7 +27,7 @@ impl From<ParseError> for Element {
 
 impl From<Trivia> for Element {
     fn from(trivia: Trivia) -> Element {
-        trivia.into_token().into()
+        Element::Trivia(trivia)
     }
 }
 

@@ -58,8 +58,18 @@ impl NodeData {
         &self.children
     }
 
-    pub(crate) fn push_token(&mut self, token: TokenData) {
-        self.children.push(token.into())
+    pub(crate) fn push_token(&mut self, mut token: TokenData) {
+        let (leading, trailing) = token.take_trivia();
+
+        for trivia in leading {
+            self.children.push(trivia.into());
+        }
+
+        self.children.push(token.into());
+
+        for trivia in trailing {
+            self.children.push(trivia.into());
+        }
     }
 
     pub(crate) fn push_error(&mut self, error: ParseError) {

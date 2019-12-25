@@ -100,6 +100,12 @@ impl TokenData {
         &self.trailing
     }
 
+    pub(crate) fn take_trivia(&mut self) -> (Vec<Trivia>, Vec<Trivia>) {
+        let leading = std::mem::replace(&mut self.leading, vec![]);
+        let trailing = std::mem::replace(&mut self.trailing, vec![]);
+        (leading, trailing)
+    }
+
     pub(crate) fn push_leading_token(&mut self, token: TokenData) {
         self.leading.push(token.into());
     }

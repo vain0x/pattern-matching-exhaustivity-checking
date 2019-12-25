@@ -1,207 +1,137 @@
 N(Root) [
     N(EnumDecl) [
         T(Enum) "enum"
-        ^ [
-            T(Space) " "
-        ]
+        T(Space) " "
         T(Ident) "Boolean"
-        ^ [
-            T(Space) " "
-        ]
+        T(Space) " "
         T(LeftBrace) "{"
         N(CtorDecl) [
-            v [
-                T(Eol) "\n"
-                T(Space) "    "
-            ]
+            T(Eol) "\n"
+            T(Space) "    "
             T(Ident) "True"
         ]
         T(Comma) ","
         N(CtorDecl) [
-            v [
-                T(Eol) "\n"
-                T(Space) "    "
-            ]
+            T(Eol) "\n"
+            T(Space) "    "
             T(Ident) "False"
         ]
         T(Comma) ","
-        v [
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
         T(RightBrace) "}"
     ]
     N(MatchStmt) [
-        v [
-            T(Eol) "\n"
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
+        T(Eol) "\n"
         T(Match) "match"
-        ^ [
-            T(Space) " "
-        ]
+        T(Space) " "
         N(Name) [
             T(Ident) "True"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
         ]
         T(LeftBrace) "{"
         N(MatchArm) [
             N(Name) [
-                v [
-                    T(Eol) "\n"
-                    T(Space) "    "
-                ]
+                T(Eol) "\n"
+                T(Space) "    "
                 T(Ident) "True"
-                ^ [
-                    T(Space) " "
-                ]
+                T(Space) " "
             ]
             T(Equal) "="
             T(RightAngle) ">"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
             T(LeftBrace) "{"
-            v [
-                T(Eol) "\n"
-                T(Space) "        "
-                T(Comment) "// YES"
-                T(Eol) "\n"
-                T(Space) "    "
-            ]
+            T(Eol) "\n"
+            T(Space) "        "
+            T(Comment) "// YES"
+            T(Eol) "\n"
+            T(Space) "    "
             T(RightBrace) "}"
         ]
         N(MatchArm) [
             N(Name) [
-                v [
-                    T(Eol) "\n"
-                    T(Space) "    "
-                ]
+                T(Eol) "\n"
+                T(Space) "    "
                 T(Ident) "False"
-                ^ [
-                    T(Space) " "
-                ]
+                T(Space) " "
             ]
             T(Equal) "="
             T(RightAngle) ">"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
             T(LeftBrace) "{"
-            v [
-                T(Eol) "\n"
-                T(Space) "        "
-                T(Comment) "// NO"
-                T(Eol) "\n"
-                T(Space) "    "
-            ]
+            T(Eol) "\n"
+            T(Space) "        "
+            T(Comment) "// NO"
+            T(Eol) "\n"
+            T(Space) "    "
             T(RightBrace) "}"
         ]
-        v [
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
         T(RightBrace) "}"
     ]
     N(MatchStmt) [
-        v [
-            T(Eol) "\n"
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
+        T(Eol) "\n"
         T(Match) "match"
-        ^ [
-            T(Space) " "
-        ]
+        T(Space) " "
         N(Name) [
             T(Ident) "True"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
         ]
         T(LeftBrace) "{"
         N(MatchArm) [
             N(Name) [
-                v [
-                    T(Eol) "\n"
-                    T(Space) "    "
-                ]
+                T(Eol) "\n"
+                T(Space) "    "
                 T(Ident) "True"
-                ^ [
-                    T(Space) " "
-                ]
+                T(Space) " "
             ]
             T(Equal) "="
             T(RightAngle) ">"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
             T(LeftBrace) "{"
             T(RightBrace) "}"
         ]
-        v [
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
         T(RightBrace) "}"
     ]
     N(MatchStmt) [
-        v [
-            T(Eol) "\n"
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
+        T(Eol) "\n"
         T(Match) "match"
-        ^ [
-            T(Space) " "
-        ]
+        T(Space) " "
         N(Name) [
             T(Ident) "False"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
         ]
         T(LeftBrace) "{"
         N(MatchArm) [
             N(Name) [
-                v [
-                    T(Eol) "\n"
-                    T(Space) "    "
-                ]
+                T(Eol) "\n"
+                T(Space) "    "
                 T(Underscore) "_"
-                ^ [
-                    T(Space) " "
-                ]
+                T(Space) " "
             ]
             T(Equal) "="
             T(RightAngle) ">"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
             T(LeftBrace) "{"
             T(RightBrace) "}"
         ]
-        v [
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
         T(RightBrace) "}"
     ]
     N(EnumDecl) [
-        v [
-            T(Eol) "\n"
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
+        T(Eol) "\n"
         T(Enum) "enum"
-        ^ [
-            T(Space) " "
-        ]
+        T(Space) " "
         T(Ident) "Digit"
-        ^ [
-            T(Space) " "
-        ]
+        T(Space) " "
         T(LeftBrace) "{"
         N(CtorDecl) [
-            v [
-                T(Eol) "\n"
-                T(Space) "    "
-            ]
+            T(Eol) "\n"
+            T(Space) "    "
             T(Ident) "One"
             N(TupleDecl) [
                 T(LeftParen) "("
@@ -210,10 +140,8 @@ N(Root) [
         ]
         T(Comma) ","
         N(CtorDecl) [
-            v [
-                T(Eol) "\n"
-                T(Space) "    "
-            ]
+            T(Eol) "\n"
+            T(Space) "    "
             T(Ident) "Two"
             N(TupleDecl) [
                 T(LeftParen) "("
@@ -226,20 +154,14 @@ N(Root) [
             ]
         ]
         T(Comma) ","
-        v [
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
         T(RightBrace) "}"
     ]
     N(MatchStmt) [
-        v [
-            T(Eol) "\n"
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
+        T(Eol) "\n"
         T(Match) "match"
-        ^ [
-            T(Space) " "
-        ]
+        T(Space) " "
         N(Call) [
             N(Name) [
                 T(Ident) "Two"
@@ -251,41 +173,31 @@ N(Root) [
                 ]
             ]
             T(RightParen) ")"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
         ]
         T(LeftBrace) "{"
         N(MatchArm) [
             N(Call) [
                 N(Name) [
-                    v [
-                        T(Eol) "\n"
-                        T(Space) "    "
-                    ]
+                    T(Eol) "\n"
+                    T(Space) "    "
                     T(Ident) "One"
                 ]
                 T(LeftParen) "("
                 T(RightParen) ")"
-                ^ [
-                    T(Space) " "
-                ]
+                T(Space) " "
             ]
             T(Equal) "="
             T(RightAngle) ">"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
             T(LeftBrace) "{"
             T(RightBrace) "}"
         ]
         N(MatchArm) [
             N(Call) [
                 N(Name) [
-                    v [
-                        T(Eol) "\n"
-                        T(Space) "    "
-                    ]
+                    T(Eol) "\n"
+                    T(Space) "    "
                     T(Ident) "Two"
                 ]
                 T(LeftParen) "("
@@ -295,21 +207,15 @@ N(Root) [
                     ]
                 ]
                 T(RightParen) ")"
-                ^ [
-                    T(Space) " "
-                ]
+                T(Space) " "
             ]
             T(Equal) "="
             T(RightAngle) ">"
-            ^ [
-                T(Space) " "
-            ]
+            T(Space) " "
             T(LeftBrace) "{"
             T(RightBrace) "}"
         ]
-        v [
-            T(Eol) "\n"
-        ]
+        T(Eol) "\n"
         T(RightBrace) "}"
     ]
     T(Eof) ""

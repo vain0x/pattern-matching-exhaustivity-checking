@@ -22,10 +22,6 @@ pub(crate) fn collect_errors(
     errors: &mut Vec<(TextRange, String)>,
 ) {
     fn on_token(token: &TokenData, cursor: &mut TextCursor, errors: &mut Vec<(TextRange, String)>) {
-        for trivia in token.leading() {
-            on_token(trivia.as_token(), cursor, errors);
-        }
-
         let start = cursor.current();
         cursor.advance(token.text());
         let end = cursor.current();
@@ -35,10 +31,6 @@ pub(crate) fn collect_errors(
         // FIXME: 構文木の中に配置する。
         if token.token() == Token::Other {
             on_error(ParseError::UnexpectedChars, range, errors);
-        }
-
-        for trivia in token.trailing() {
-            on_token(trivia.as_token(), cursor, errors);
         }
     }
 
@@ -59,6 +51,7 @@ pub(crate) fn collect_errors(
     ) {
         match element {
             Element::Token(token) => on_token(token, cursor, errors),
+            Element::Trivia(trivia) => on_token(trivia.as_token(), cursor, errors),
             Element::Error(error) => {
                 let start = cursor.current();
                 let range = TextRange::new(start, start);

@@ -51,6 +51,9 @@ impl TokenRangeMap {
             Element::Token(token) => {
                 self.on_token(token);
             }
+            Element::Trivia(trivia) => {
+                self.on_token(trivia.as_token());
+            }
             Element::Error(_) => {}
             Element::Node(node) => {
                 self.on_node(&node);

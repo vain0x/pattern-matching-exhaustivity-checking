@@ -45,26 +45,12 @@ mod tests {
         &SPACES[0..depth * 4]
     }
 
-    fn go(token: &TokenData, indent: &str, out: &mut Vec<u8>) -> io::Result<()> {
-        let leading_indent = format!("{} v", indent);
-
-        for trivia in token.leading() {
-            go(trivia.as_token(), &leading_indent, out)?;
-        }
-
-        write!(out, "{}{:?} {:?}\n", indent, token.token(), token.text())?;
-
-        let trailing_indent = format!("{} ^", indent);
-
-        for trivia in token.trailing() {
-            go(trivia.as_token(), &trailing_indent, out)?;
-        }
-
-        Ok(())
-    }
-
     #[test]
     fn test_tokenize() {
+        fn write_token(token: &TokenData, prefix: &str, out: &mut Vec<u8>) -> io::Result<()> {
+            write!(out, "{}{:?} {:?}\n", prefix, token.token(), token.text())
+        }
+
         let root_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         let tests_dir = root_dir.join("./tests");
 
@@ -74,7 +60,15 @@ mod tests {
 
         let mut snapshot = vec![];
         for token in tokens.iter() {
-            go(token, "", &mut snapshot).unwrap();
+            for trivia in token.leading() {
+                write_token(trivia.as_token(), " v", &mut snapshot).unwrap();
+            }
+
+            write_token(token, "", &mut snapshot).unwrap();
+
+            for trivia in token.trailing() {
+                write_token(trivia.as_token(), " ^", &mut snapshot).unwrap();
+            }
         }
 
         fs::write(&tests_dir.join("tokenize_snapshot.txt"), snapshot).unwrap();
@@ -124,6 +118,7 @@ mod tests {
         fn on_element(element: &Element, depth: usize, w: &mut Vec<u8>) -> io::Result<()> {
             match element {
                 Element::Token(token) => on_token(token, depth, w)?,
+                Element::Trivia(trivia) => on_token(trivia.as_token(), depth, w)?,
                 Element::Error(error) => {
                     write!(w, "{}E({:?})\n", indent(depth), error)?;
                 }
