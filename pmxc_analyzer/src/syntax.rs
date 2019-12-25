@@ -53,9 +53,6 @@ mod tests {
                 Trivia::Token(token) => {
                     go(token, &leading_indent, out)?;
                 }
-                Trivia::Error(error) => {
-                    write!(out, "{}{:?}\n", &leading_indent, error)?;
-                }
             }
         }
 
@@ -67,9 +64,6 @@ mod tests {
             match trivia {
                 Trivia::Token(token) => {
                     go(token, &trailing_indent, out)?;
-                }
-                Trivia::Error(error) => {
-                    write!(out, "{}{:?}\n", &trailing_indent, error).unwrap();
                 }
             }
         }
@@ -126,7 +120,6 @@ mod tests {
         fn on_trivia(trivia: &Trivia, depth: usize, w: &mut Vec<u8>) -> io::Result<()> {
             match trivia {
                 Trivia::Token(token) => on_token(token, depth, w)?,
-                Trivia::Error(_) => {}
             }
 
             Ok(())

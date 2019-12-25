@@ -83,10 +83,6 @@ impl TokenizeContext {
     fn push_token(&mut self, mut token_data: TokenData) {
         let token = token_data.token();
 
-        if token == Token::Other {
-            token_data.push_trailing_error(ParseError::UnexpectedChars);
-        }
-
         if token.is_trailing_trivia() && !self.tokens.is_empty() && self.leading.is_empty() {
             self.tokens
                 .last_mut()

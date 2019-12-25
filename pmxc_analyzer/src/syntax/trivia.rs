@@ -7,17 +7,10 @@ use super::*;
 #[derive(Clone, Debug)]
 pub(crate) enum Trivia {
     Token(TokenData),
-    Error(ParseError),
 }
 
 impl From<TokenData> for Trivia {
     fn from(token: TokenData) -> Trivia {
         Trivia::Token(token)
-    }
-}
-
-impl From<ParseError> for Trivia {
-    fn from(error: ParseError) -> Trivia {
-        Trivia::Error(error)
     }
 }

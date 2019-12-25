@@ -98,16 +98,8 @@ impl TokenData {
         self.leading.push(token.into());
     }
 
-    pub(crate) fn push_leading_error(&mut self, error: ParseError) {
-        self.leading.push(error.into());
-    }
-
     pub(crate) fn push_trailing_token(&mut self, token: TokenData) {
         self.trailing.push(token.into());
-    }
-
-    pub(crate) fn push_trailing_error(&mut self, error: ParseError) {
-        self.trailing.push(error.into());
     }
 
     fn traverse_tokens<F: FnMut(&TokenData) -> bool>(&self, f: &mut F) -> bool {
@@ -118,7 +110,6 @@ impl TokenData {
                         return false;
                     }
                 }
-                Trivia::Error(_) => {}
             }
         }
 
@@ -133,7 +124,6 @@ impl TokenData {
                         return false;
                     }
                 }
-                Trivia::Error(_) => {}
             }
         }
 

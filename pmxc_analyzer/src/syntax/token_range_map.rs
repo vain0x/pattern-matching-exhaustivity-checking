@@ -39,7 +39,6 @@ impl TokenRangeMap {
     fn on_trivia(&mut self, trivia: &Trivia) {
         match trivia {
             Trivia::Token(token) => self.on_token(token),
-            Trivia::Error(_) => {}
         }
     }
 

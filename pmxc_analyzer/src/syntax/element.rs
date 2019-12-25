@@ -25,7 +25,6 @@ impl From<Trivia> for Element {
     fn from(trivia: Trivia) -> Element {
         match trivia {
             Trivia::Token(token) => token.into(),
-            Trivia::Error(error) => error.into(),
         }
     }
 }

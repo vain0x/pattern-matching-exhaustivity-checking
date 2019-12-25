@@ -1,5 +1,4 @@
  vOther "解釈できない文字"
- v ^UnexpectedChars
  vEol "\n"
  vEol "\n"
 Enum "enum"
@@ -66,10 +65,8 @@ RightBrace "}"
  vEol "\n"
  vEol "\n"
  vOther "解釈できない文字"
- v ^UnexpectedChars
  vEol "\n"
  vEol "\n"
  vOther "おわり"
- v ^UnexpectedChars
  vEol "\n"
 Eof ""

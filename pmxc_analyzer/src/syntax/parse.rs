@@ -33,6 +33,12 @@ pub(crate) fn collect_errors(
         let end = cursor.current();
         let range = TextRange::new(start, end);
 
+        // 字句解析中のエラー。
+        // FIXME: 構文木の中に配置する。
+        if token.token() == Token::Other {
+            on_error(ParseError::UnexpectedChars, range, errors);
+        }
+
         for trivia in token.trailing() {
             on_trivia(trivia, range, cursor, errors);
         }
@@ -50,7 +56,6 @@ pub(crate) fn collect_errors(
     ) {
         match trivia {
             Trivia::Token(token) => on_token(token, cursor, errors),
-            Trivia::Error(error) => on_error(*error, parent_range, errors),
         }
     }
 

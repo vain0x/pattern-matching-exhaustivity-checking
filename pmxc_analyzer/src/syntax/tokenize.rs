@@ -18,7 +18,6 @@ pub(crate) fn tokenize_with_utf16_indices(source_code: Rc<String>) -> Box<[(Toke
                 Trivia::Token(token) => {
                     go(token, token_indices, index);
                 }
-                Trivia::Error(_) => continue,
             }
         }
 
@@ -32,7 +31,6 @@ pub(crate) fn tokenize_with_utf16_indices(source_code: Rc<String>) -> Box<[(Toke
                 Trivia::Token(token) => {
                     go(token, token_indices, index);
                 }
-                Trivia::Error(_) => continue,
             }
         }
     }
