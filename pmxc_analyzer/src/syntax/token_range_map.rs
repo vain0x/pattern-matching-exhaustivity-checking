@@ -37,9 +37,7 @@ impl TokenRangeMap {
     }
 
     fn on_trivia(&mut self, trivia: &Trivia) {
-        match trivia {
-            Trivia::Token(token) => self.on_token(token),
-        }
+        self.on_token(trivia.as_token())
     }
 
     fn on_node(&mut self, node: &NodeData) {

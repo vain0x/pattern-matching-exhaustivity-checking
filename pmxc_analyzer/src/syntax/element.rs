@@ -23,9 +23,7 @@ impl From<ParseError> for Element {
 
 impl From<Trivia> for Element {
     fn from(trivia: Trivia) -> Element {
-        match trivia {
-            Trivia::Token(token) => token.into(),
-        }
+        trivia.into_token().into()
     }
 }
 

@@ -49,11 +49,7 @@ mod tests {
         let leading_indent = format!("{} v", indent);
 
         for trivia in token.leading() {
-            match trivia {
-                Trivia::Token(token) => {
-                    go(token, &leading_indent, out)?;
-                }
-            }
+            go(trivia.as_token(), &leading_indent, out)?;
         }
 
         write!(out, "{}{:?} {:?}\n", indent, token.token(), token.text())?;
@@ -61,11 +57,7 @@ mod tests {
         let trailing_indent = format!("{} ^", indent);
 
         for trivia in token.trailing() {
-            match trivia {
-                Trivia::Token(token) => {
-                    go(token, &trailing_indent, out)?;
-                }
-            }
+            go(trivia.as_token(), &trailing_indent, out)?;
         }
 
         Ok(())
@@ -93,7 +85,7 @@ mod tests {
             if !token.leading().is_empty() {
                 write!(w, "{}v [\n", indent(depth))?;
                 for trivia in token.leading() {
-                    on_trivia(trivia, depth + 1, w)?;
+                    on_token(trivia.as_token(), depth + 1, w)?;
                 }
                 write!(w, "{}]\n", indent(depth))?;
             }
@@ -109,17 +101,9 @@ mod tests {
             if !token.trailing().is_empty() {
                 write!(w, "{}^ [\n", indent(depth))?;
                 for trivia in token.trailing() {
-                    on_trivia(trivia, depth + 1, w)?;
+                    on_token(trivia.as_token(), depth + 1, w)?;
                 }
                 write!(w, "{}]\n", indent(depth))?;
-            }
-
-            Ok(())
-        }
-
-        fn on_trivia(trivia: &Trivia, depth: usize, w: &mut Vec<u8>) -> io::Result<()> {
-            match trivia {
-                Trivia::Token(token) => on_token(token, depth, w)?,
             }
 
             Ok(())

@@ -14,11 +14,7 @@ pub(crate) fn tokenize(source_code: Rc<String>) -> Box<[TokenData]> {
 pub(crate) fn tokenize_with_utf16_indices(source_code: Rc<String>) -> Box<[(Token, usize)]> {
     fn go(token: &TokenData, token_indices: &mut Vec<(Token, usize)>, index: &mut usize) {
         for trivia in token.leading() {
-            match trivia {
-                Trivia::Token(token) => {
-                    go(token, token_indices, index);
-                }
-            }
+            go(trivia.as_token(), token_indices, index);
         }
 
         let start = *index;
@@ -27,11 +23,7 @@ pub(crate) fn tokenize_with_utf16_indices(source_code: Rc<String>) -> Box<[(Toke
         token_indices.push((token.token(), start));
 
         for trivia in token.trailing() {
-            match trivia {
-                Trivia::Token(token) => {
-                    go(token, token_indices, index);
-                }
-            }
+            go(trivia.as_token(), token_indices, index);
         }
     }
 

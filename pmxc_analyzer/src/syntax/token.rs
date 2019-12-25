@@ -57,6 +57,12 @@ impl Token {
     pub(crate) fn is_trailing_trivia(self) -> bool {
         self == Token::Space || self == Token::Comment || self == Token::Other
     }
+
+    pub(crate) fn is_trivia(self) -> bool {
+        debug_assert!(!self.is_trailing_trivia() || self.is_leading_trivia());
+
+        self.is_leading_trivia()
+    }
 }
 
 /// 字句のデータ
@@ -104,12 +110,8 @@ impl TokenData {
 
     fn traverse_tokens<F: FnMut(&TokenData) -> bool>(&self, f: &mut F) -> bool {
         for trivia in self.leading() {
-            match trivia {
-                Trivia::Token(token) => {
-                    if !token.traverse_tokens(f) {
-                        return false;
-                    }
-                }
+            if !trivia.as_token().traverse_tokens(f) {
+                return false;
             }
         }
 
@@ -118,12 +120,8 @@ impl TokenData {
         }
 
         for trivia in self.trailing() {
-            match trivia {
-                Trivia::Token(token) => {
-                    if !token.traverse_tokens(f) {
-                        return false;
-                    }
-                }
+            if !trivia.as_token().traverse_tokens(f) {
+                return false;
             }
         }
 

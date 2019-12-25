@@ -23,9 +23,7 @@ pub(crate) fn collect_errors(
 ) {
     fn on_token(token: &TokenData, cursor: &mut TextCursor, errors: &mut Vec<(TextRange, String)>) {
         for trivia in token.leading() {
-            let start = cursor.current();
-            let range = TextRange::new(start, start);
-            on_trivia(trivia, range, cursor, errors);
+            on_token(trivia.as_token(), cursor, errors);
         }
 
         let start = cursor.current();
@@ -40,23 +38,12 @@ pub(crate) fn collect_errors(
         }
 
         for trivia in token.trailing() {
-            on_trivia(trivia, range, cursor, errors);
+            on_token(trivia.as_token(), cursor, errors);
         }
     }
 
     fn on_error(error: ParseError, range: TextRange, errors: &mut Vec<(TextRange, String)>) {
         errors.push((range, format!("{:?}", error)));
-    }
-
-    fn on_trivia(
-        trivia: &Trivia,
-        parent_range: TextRange,
-        cursor: &mut TextCursor,
-        errors: &mut Vec<(TextRange, String)>,
-    ) {
-        match trivia {
-            Trivia::Token(token) => on_token(token, cursor, errors),
-        }
     }
 
     fn on_node(node: &NodeData, cursor: &mut TextCursor, errors: &mut Vec<(TextRange, String)>) {
