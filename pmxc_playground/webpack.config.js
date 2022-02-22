@@ -53,8 +53,11 @@ module.exports = {
 
     // webpack-dev-server の設定。
     devServer: {
-        contentBase: "dist",
+        static: { directory: path.join(__dirname, "dist") },
         compress: true,
         port: 8080,
+    },
+    experiments: {
+        asyncWebAssembly: true,
     },
 }

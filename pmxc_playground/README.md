@@ -15,5 +15,5 @@ npm ci
 開発環境で動かすには、pmxc_analyzer をビルドしてから、webpack-dev-server を実行してください。
 
 ```sh
-npm run dev:server
+npm run dev:serve
 ```
