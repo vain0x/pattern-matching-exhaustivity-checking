@@ -7,9 +7,10 @@
   "files": [
     "pmxc_analyzer_bg.wasm",
     "pmxc_analyzer.js",
+    "pmxc_analyzer_bg.js",
     "pmxc_analyzer.d.ts"
   ],
   "module": "pmxc_analyzer.js",
   "types": "pmxc_analyzer.d.ts",
-  "sideEffects": "false"
+  "sideEffects": false
 }

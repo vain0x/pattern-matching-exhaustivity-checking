@@ -23,6 +23,49 @@ match True {
 }
 ```
 
+## 構文
+
+```ini
+# カンマ区切りの略記
+( s ),* ==> ( s ( "," s )* )?
+
+
+
+ty = ident
+
+
+
+pat = discard-pat / ctor-pat
+
+discard-pat = "_"
+
+ctor-pat = ident ( "(" ( pat ),* ")" )?
+
+
+
+expr = call-expr
+
+atom-expr = ident / "(" expr ")"
+
+call-expr = atom-expr ( "(" ( expr ),* ")" )*
+
+
+
+stmt = match-stmt / enum-decl
+
+match-stmt = "match" expr "{" ( match-arm )* "}"
+
+match-arm = pat "=>" "{" "}"
+
+ctor-decl = ident ( "(" ( ty ),* ")" )?
+
+enum-decl = "enum" ident "{" ( ctor-decl ),* "}"
+
+
+
+root = stmt*
+```
+
 ## 開発環境
 
 以下のツールをインストールしてください。
